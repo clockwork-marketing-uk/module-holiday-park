@@ -1,0 +1,43 @@
+{
+    "name": "clockwork-marketing-dev/module-holiday-park",
+    "description": "Holiday Park module for CMS",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Clockwork Marketing",
+            "email": "dev@clock-work.co.uk"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/clockwork-marketing-uk/module-core"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/clockwork-marketing-uk/module-media-library"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/clockwork-marketing-uk/elite-parks-api"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Clockwork\\HolidayPark\\": "src"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Clockwork\\HolidayPark\\HolidayParkCmsModule"
+            ]
+        }
+    },
+    "require": {
+        "clockwork-marketing-dev/module-core": "^2.0.2",
+        "clockwork-marketing-dev/elite-parks-api": "^1.0"
+    }
+}
