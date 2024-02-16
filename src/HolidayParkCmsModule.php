@@ -4,6 +4,8 @@ namespace Clockwork\HolidayPark;
 
 use Clockwork\Core\CmsModuleConfig;
 use Clockwork\Core\Abstracts\CmsModule;
+use Clockwork\HolidayPark\Services\HolidayParkApiService;
+use Clockwork\HolidayPark\Interfaces\HolidayParkApiInterface;
 use Clockwork\HolidayPark\Interfaces\ParkAccommodationInterface;
 use Clockwork\HolidayPark\Repositories\ParkAccommodationRepository;
 
@@ -19,6 +21,7 @@ class HolidayParkCmsModule extends CmsModule
     public function register()
     {
         $this->app->bind(ParkAccommodationInterface::class, ParkAccommodationRepository::class);
+        $this->app->bind(HolidayParkApiInterface::class, HolidayParkApiService::class);
     }
 
     /**

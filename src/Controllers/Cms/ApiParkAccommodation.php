@@ -3,41 +3,41 @@
 namespace Clockwork\HolidayPark\Controllers\Cms;
 
 use Clockwork\Core\Abstracts\CmsController;
+use Clockwork\HolidayPark\Repositories\ParkAccommodationRepository;
 use Illuminate\Http\Request;
-use Clockwork\Accommodation\Contracts\FacilityInterface;
 
 class ApiParkAccommodationController extends CmsController
 {
-  private $facility;
+  private $parkAccommodationRepository;
 
-  public function __construct(FacilityInterface $facility)
+  public function __construct(ParkAccommodationRepository $parkAccommodationRepository)
   {
-    $this->facility = $facility;
+    $this->parkAccommodationRepository = $parkAccommodationRepository;
   }
 
   public function index(Request $request)
   {
-    return response()->json($this->facility->all());
+    return response()->json($this->parkAccommodationRepository->all());
   }
 
   public function show($id)
   {
     return response()->json([
-      "facility" => $this->facility->get($id),
+      "parkAccommodation" => $this->parkAccommodationRepository->get($id),
     ]);
   }
 
   public function edit($id)
   {
     return response()->json([
-      "facility" => $this->facility->get($id),
+      "parkAccommodation" => $this->parkAccommodationRepository->get($id),
     ]);
   }
 
   public function store(Request $request)
   {
-    $request->validate($this->facility->getValidationRules());
-    $id = $this->facility->store($request->model);
+    $request->validate($this->parkAccommodationRepository->getValidationRules());
+    $id = $this->parkAccommodationRepository->store($request->model);
 
     return response()->json([
       "id" => $id,
@@ -47,9 +47,9 @@ class ApiParkAccommodationController extends CmsController
 
   public function update(Request $request, $id)
   {
-    $request->validate($this->facility->getValidationRules());
+    $request->validate($this->parkAccommodationRepository->getValidationRules());
 
-    $this->facility->update($id, $request->model);
+    $this->parkAccommodationRepository->update($id, $request->model);
 
     return response()->json([
       "csrf_token" => csrf_token(),
@@ -58,7 +58,7 @@ class ApiParkAccommodationController extends CmsController
 
   public function destroy($id)
   {
-    $this->facility->delete($id);
+    $this->parkAccommodationRepository->delete($id);
   }
 
   public function reorder(Request $request)
@@ -68,7 +68,7 @@ class ApiParkAccommodationController extends CmsController
         "sort_order" => $key + 1,
       ];
 
-      $this->facility->update($item["id"], $attrs);
+      $this->parkAccommodationRepository->update($item["id"], $attrs);
     }
   }
 }
