@@ -5,14 +5,14 @@ use Clockwork\Settings\Repositories\SettingRepository;
 $holiday_park_prefix = null;
 
 try {
-    $holiday_park_prefix = app(SettingRepository::class)->getValueByKey("accommodation_route");
+    $holiday_park_prefix = app(SettingRepository::class)->getValueByKey("park_accommodation_route");
 } catch (Exception $e) {
     // do nothing
 }
 
 Route::prefix($holiday_park_prefix)->group(function () {
-    Route::get("category/{slug}", [ParkAccommodationCategoryController::class, "category"])->name("accommodation.category");
-    Route::get("/{slug}", [ParkAccommodationController::class, "accommodation"])->name("accommodation.accommodation");
+    Route::get("category/{slug}", [ParkAccommodationCategoryController::class, "category"])->name("park-accommodation.category");
+    Route::get("/{slug}", [ParkAccommodationController::class, "page"])->name("park-accommodation.page");
 });
 
 Route::prefix("/cms/api/park-accommodation/")
