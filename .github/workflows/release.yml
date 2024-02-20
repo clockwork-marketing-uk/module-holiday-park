@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+  issues: write
+  actions: read
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Build Dependencies
+        run: npm ci
+
+      - name: Create a Release
+        id: create-release
+        uses: clockwork-marketing-uk/actions-release@1.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  release-fail:
+    name: Complete
+    needs: ['release']
+    runs-on: ubuntu-latest
+    if: always() && needs.release.result != 'success'
+    steps:
+      - name: Create Issue
+        id: create-issue
+        uses: dacbd/create-issue-action@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          title: Failed to create a Release
+          body: The pipeline has failed to create a Release.
+          assignees: ${{ github.actor }}
+
+      - name: Failed Workflow
+        id: fail-workflow
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: core.setFailed('Release FAILED')
