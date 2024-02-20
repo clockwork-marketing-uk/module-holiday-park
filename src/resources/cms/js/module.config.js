@@ -13,24 +13,24 @@ const routes = [
     },
   },
   {
-    path: "/park-accommodation/model/:id",
+    path: "/holiday-park/park-accommodation/:id",
     component: viewModelParkAccommodation,
     props: true,
     meta: {
       breadcrumbs: {
         label: "Park Accommodation",
-        parent: "park-accommodation",
+        parent: "holiday-park",
       },
     },
   },
   // {
-  //   path: "/park-accommodation/category/:id",
-  //   component: viewModelCategory,
+  //   path: "/holiday-park/park-accommodation/:id",
+  //   component: viewModelParkAccommodationCategory,
   //   props: true,
   //   meta: {
   //     breadcrumbs: {
   //       label: "Category",
-  //       parent: "accommodation",
+  //       parent: "holiday-park",
   //     },
   //   },
   // },
