@@ -1,0 +1,47 @@
+name: Release Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: PR Version Check
+        uses: clockwork-marketing-uk/actions-pull-request-version@1.1.2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-user: ${{ github.actor }}
+          pull-request-ref: ${{ github.event.pull_request.head.ref }}
+
+  check-tags:
+    runs-on: ubuntu-latest
+    needs: ['check-version']
+    steps:
+      - name: Tag Check
+        id: tag-check
+        uses: clockwork-marketing-uk/actions-tag-check@1.1.3
+        with:
+          tag_name: ${{ needs.check-version.outputs.version }}
+
+      - name: Show
+        run: echo ${{ steps.tag-check.outputs.has_tag }}
+
+      - name : Notification
+        if: ${{ steps.tag-check.outputs.has_tag == 1 }}
+        id: create-notification
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            The current tag has been already created!
+            - Update the version manually to the next version increment :sparkles:
+            - Created by ${{ github.actor }}
+          reactions: '+1'

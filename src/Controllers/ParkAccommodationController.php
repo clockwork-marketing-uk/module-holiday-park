@@ -2,18 +2,18 @@
 
 namespace Clockwork\HolidayPark\Controllers;
 
-use Clockwork\Core\Abstracts\CmsController;
-use Clockwork\Accommodation\Repositories\AccommodationRepository;
 use Illuminate\Http\Request;
+use Clockwork\Core\Abstracts\CmsController;
+use Clockwork\HolidayPark\Repositories\ParkAccommodationRepository;
 
 class ParkAccommodationController extends CmsController
 {
-  private $accommodation;
+  private $parkAccommodationRepository;
 
-  public function __construct(AccommodationRepository $accommodation)
+  public function __construct(ParkAccommodationRepository $parkAccommodationRepository)
   {
-    $this->accommodation = $accommodation;
-    $this->module = "accommodation";
+    $this->parkAccommodationRepository = $parkAccommodationRepository;
+    $this->module = "holidaypark";
   }
 
   public function accommodation(Request $request)
@@ -22,11 +22,11 @@ class ParkAccommodationController extends CmsController
 
     $url_slug = preg_split("/\//", $request_uri);
 
-    $accommodation = $this->accommodation->getByBaseAttribute("url_slug", $url_slug[2]);
+    $parkAccommodation = $this->parkAccommodationRepository->getByBaseAttribute("url_slug", $url_slug[2]);
 
-    if (!$accommodation) {
+    if (!$parkAccommodation) {
       abort(404);
     }
-    return view($this->getViewName("accommodation.accommodation"), ["accommodation" => $accommodation]);
+    return view($this->getViewName("holiday-park.page"), ["parkAccommodation" => $parkAccommodation]);
   }
 }
