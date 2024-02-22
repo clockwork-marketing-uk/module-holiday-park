@@ -15,6 +15,9 @@ class CreateParkAccommodationsTable extends Migration
   {
     Schema::create("park_accommodations", function (Blueprint $table) {
       $table->id();
+      $table->integer('accommodation_id')->unique();
+      $table->integer('api_accommodation_code')->nullable();
+      $table->text("name")->nullable();
       $table->softDeletes();
       $table->timestamps();
     });

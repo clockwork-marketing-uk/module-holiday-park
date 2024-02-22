@@ -1,6 +1,6 @@
 <?php
 
-namespace Clockwork\HolidayPark\Interfaces;
+namespace Clockwork\HolidayPark\Contracts;
 
 use Clockwork\Core\Abstracts\RepositoryGenericContract;
 

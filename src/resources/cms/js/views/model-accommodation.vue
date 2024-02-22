@@ -1,7 +1,7 @@
 <template>
   <c-portlet :ready="ready">
     <template v-slot:header>
-      <c-module-header title="Accommodation Module" />
+      <c-module-header title="Holiday Park Module" />
     </template>
     <template v-slot:body>
       <c-module-sub-header v-if="isNewRecord" title="Create new accommodation" />
@@ -23,7 +23,13 @@
             <b-form-group label="Tagline">
               <b-form-input type="text" v-model="model.tagline" />
             </b-form-group>
-            <b-form-group v-if="$root.getSetting('accommodation_pricing_options_enabled') && $root.getSetting('accommodation_pricing_options_enabled') == 1" label="From Price">
+            <b-form-group
+              v-if="
+                $root.getSetting('accommodation_pricing_options_enabled') &&
+                $root.getSetting('accommodation_pricing_options_enabled') == 1
+              "
+              label="From Price"
+            >
               <b-form-input type="number" v-model="model.price" name="price" data-vv-as="Price" />
             </b-form-group>
             <b-form-group label="Category *" :invalid-feedback="errors.first('category')">
@@ -62,7 +68,13 @@
             <b-form-group label="Booking URL">
               <b-form-input type="text" v-model="model.booking_url" />
             </b-form-group>
-            <b-form-group v-if="$root.getSetting('accommodation_floor_plan_enabled') && $root.getSetting('accommodation_floor_plan_enabled') == 1" label="Floor Plan">
+            <b-form-group
+              v-if="
+                $root.getSetting('accommodation_floor_plan_enabled') &&
+                $root.getSetting('accommodation_floor_plan_enabled') == 1
+              "
+              label="Floor Plan"
+            >
               <c-media-document-picker v-model="model.floor_plan" />
             </b-form-group>
             <b-form-group label="Enabled" label-for="active" description="Whether this accommodation is enabled or not">
@@ -252,6 +264,11 @@ export default {
       flags: {
         touchedSlug: false,
       },
+
+      parkAccommodationModel: {
+        api_accommodation_code: 0,
+        accommodation_id: this.id,
+      },
     }
   },
   watch: {
@@ -359,6 +376,18 @@ export default {
 
       console.log(this.prices)
     },
+    async updateOrCreateParkAccommodation() {
+      let response = await this.$http.post("holiday-park/park-accommodation/model", {
+        _method: "POST",
+        model: this.parkAccommodationModel,
+      })
+      console.log(response.data)
+      if (response.data.parkAccommodation) {
+        this.parkAccommodationModel = response.data.parkAccommodation
+      }
+      
+      
+    },
     submit(event) {
       ;(async () => {
         try {
@@ -368,11 +397,14 @@ export default {
               _method: "POST",
               model: this.model,
             })
+            this.parkAccommodationModel.accommodation_id = response.data.id
+
+            this.updateOrCreateParkAccommodation(response.data)
 
             if (event == "save") {
-              this.$router.push("/accommodation")
+              this.$router.push("/holiday-park")
             } else {
-              this.$router.push("/accommodation/model/" + response.data.id)
+              this.$router.push("/holiday-park/park-accommodation/model/" + response.data.id)
               this.model.id = response.data.id
               this.price.accommodation_id = response.data.id
 
@@ -389,8 +421,10 @@ export default {
               model: this.model,
             })
 
+            this.updateOrCreateParkAccommodation(response.data)
+
             if (event == "save") {
-              this.$router.push("/accommodation")
+              this.$router.push("/holiday-park")
             } else {
               this.model = response.data.accommodation
               this.$bvToast.toast(this.model.base.title + " has been saved.", this.$root.toastSettings.success)
@@ -456,6 +490,18 @@ export default {
           this.model = response.data.accommodation
 
           this.ready = true
+        } catch (error) {
+          console.error(error)
+          this.failed = true
+        }
+      })()
+      ;(async () => {
+        try {
+          const response = await this.$http.get("holiday-park/park-accommodation/findByAccommodationId/" + this.id)
+
+          if (response.data.parkAccommodation) {
+            this.parkAccommodationModel = response.data.parkAccommodation
+          }
         } catch (error) {
           console.error(error)
           this.failed = true
