@@ -9,13 +9,13 @@ use Clockwork\HolidayPark\Controllers\ParkAccommodationCategoryController;
 $holiday_park_prefix = null;
 
 try {
-  $holiday_park_prefix = app(SettingRepository::class)->getValueByKey("park_accommodation_route");
+  $holiday_park_prefix = app(SettingRepository::class)->getValueByKey("accommodation_route");
 } catch (Exception $e) {
   // do nothing (lol)
 }
 
 Route::prefix($holiday_park_prefix)->group(function () {
-  Route::get("category/{slug}", [ParkAccommodationCategoryController::class, "category"])->name("park-accommodation.category");
+  // Route::get("category/{slug}", [ParkAccommodationCategoryController::class, "category"])->name("park-accommodation.category");
   Route::get("/{slug}", [ParkAccommodationController::class, "accommodation"])->name("park-accommodation.accommodation");
 });
 
@@ -37,5 +37,3 @@ Route::prefix("/cms/api/holiday-park/park-accommodation")
 
     
   });
-
-  // /holiday-park/park-accommodation/facility/0

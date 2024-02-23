@@ -24,8 +24,6 @@ class ParkAccommodationController extends CmsController
 
     $parkAccommodation = $this->parkAccommodationRepository->getByBaseAttribute("url_slug", $url_slug[2]);
 
-    // dd($parkAccommodation);
-
     if (!$parkAccommodation) {
       abort(404);
     }
