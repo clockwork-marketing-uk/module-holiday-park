@@ -94,7 +94,6 @@
                   track-by="id"
                   placeholder="Search or add new tag"
                   @tag="addNewTag"
-                  v-validate="'required'"
                 />
               </b-form-group>
             </b-tab>
@@ -214,6 +213,17 @@
                 text-field="concatenated_property_name"
               />
             </b-form-group>
+
+            <b-form-group label="Type of Property">
+                <b-form-select
+                  v-if="typesLoaded"
+                  :options="types"
+                  v-model="parkAccommodationModel.type"
+                  name="type"
+                  value-field="id"
+                  text-field="name"
+                />
+              </b-form-group>
           </b-tab>
         </b-tabs>
       </div>
@@ -286,11 +296,13 @@ export default {
         id: 0,
         accommodationId: this.id,
         apiPropertyId: 0,
-        apiPropertyType: "",
+        apiPropertyType: "Clockwork\Accommodation\Models\Accommodation",
         text: "",
+        type: null
       },
 
       apiProperties: [{ id: 0, concatenated_property_name: "None" }],
+      type: [],
     }
   },
   watch: {
@@ -323,6 +335,16 @@ export default {
         temp.push({
           id: item.id,
           tag: item.tag,
+        })
+      }
+      return temp
+    },
+    buildTypesListForDropDown(data) {
+      let temp = [{id: null, name: "None"}]
+      for (let item of data) {
+        temp.push({
+          id: item.id,
+          name: item.name,
         })
       }
       return temp
@@ -396,8 +418,6 @@ export default {
       }
     },
     async updateOrCreateParkAccommodation(accommodationId) {
-      console.log("saving")
-
       let response = await this.$http.post("holiday-park/park-accommodation/model", {
         _method: "POST",
         model: this.parkAccommodationModel,
@@ -441,7 +461,7 @@ export default {
               model: this.model,
             })
 
-            this.updateOrCreateParkAccommodation(this.model.id)
+            this.updateOrCreateParkAccommodation()
 
             if (event == "save") {
               this.$router.push("/holiday-park")
@@ -477,6 +497,7 @@ export default {
   },
   mounted() {
     this.apiPropertiesLoaded = false
+    this.typesLoaded = false
     /**
      * Fetch tags for tag dropdown
      */
@@ -490,6 +511,16 @@ export default {
       try {
         const response = await this.$http.get("accommodation/tag")
         this.tags = this.buildListForDropDown(response.data)
+      } catch (error) {
+        console.error(error)
+        this.failed = true
+      }
+    })()
+
+    ;(async () => {
+      try {
+        const response = await this.$http.get("holiday-park/park-accommodation/types")
+        this.types = this.buildTypesListForDropDown(response.data?.types)
       } catch (error) {
         console.error(error)
         this.failed = true
@@ -539,15 +570,25 @@ export default {
         try {
           const response = await this.$http.get("holiday-park/park-accommodation/findByAccommodationId/" + this.id)
           if (response.data.parkAccommodation) {
+            let propertyId = null;
+            let propertyType = "Clockwork\Accommodation\Models\Accommodation";
+            let type = null;
+            if (response.data.parkAccommodation.property.length > 0) {
+              propertyId = response.data.parkAccommodation.property[0].id
+              propertyType = response.data.parkAccommodation.property[0].class_name
+            }
+            if (response.data.parkAccommodation?.type?.id) {
+              type = response.data.parkAccommodation.type.id
+            }
             this.parkAccommodationModel = {
               id: response.data.parkAccommodation.id,
-              apiPropertyId: response.data.parkAccommodation.property[0].id,
-              apiPropertyType: response.data.parkAccommodation.property[0].class_name,
+              apiPropertyId: propertyId,
+              apiPropertyType: propertyType,
               text: "",
-              accommodationId: this.id
+              accommodationId: this.id,
+              type: type
             }
           }
-          console.log(response.data)
         } catch (error) {
           console.error(error)
           this.failed = true
@@ -559,6 +600,7 @@ export default {
 
     this.getApiProperties()
     this.apiPropertiesLoaded = true
+    this.typesLoaded = true
   },
 }
 </script>
