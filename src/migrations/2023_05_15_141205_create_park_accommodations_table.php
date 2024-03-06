@@ -13,14 +13,15 @@ class CreateParkAccommodationsTable extends Migration
    */
   public function up()
   {
-    Schema::create("park_accommodations", function (Blueprint $table) {
-      $table->id();
-      $table->integer('accommodation_id')->unique();
-      $table->integer('api_accommodation_code')->nullable();
-      $table->text("name")->nullable();
-      $table->softDeletes();
-      $table->timestamps();
-    });
+    if (!Schema::hasTable('park_accommodations')) {
+      Schema::create("park_accommodations", function (Blueprint $table) {
+        $table->id();
+        $table->text("name")->nullable();
+        $table->softDeletes();
+        $table->timestamps();
+      });
+    }
+    
   }
 
   /**
