@@ -5,6 +5,7 @@ namespace Clockwork\HolidayPark\Controllers\Cms;
 use Illuminate\Http\Request;
 use Clockwork\Core\Abstracts\CmsController;
 use Clockwork\HolidayPark\Models\ParkAccommodation;
+use Clockwork\HolidayPark\Services\HolidayParkApiService;
 use Clockwork\HolidayPark\Repositories\ParkAccommodationRepository;
 
 class ApiParkAccommodationController extends CmsController
@@ -68,9 +69,16 @@ class ApiParkAccommodationController extends CmsController
     }
   }
 
-  public function findByAccommodationId($accommodatonId) {
+  public function findByAccommodationId($accommodationId) {
     return response()->json([
-      "parkAccommodation" => ParkAccommodation::where('accommodation_id', $accommodatonId)->first(),
+      "parkAccommodation" => HolidayParkApiService::getParkAccommodationByAccommodationId($accommodationId),
+      "csrf_token" => csrf_token(),
+    ]);
+  }
+
+  public function getApiProperties() {
+    return response()->json([
+      "properties" => HolidayParkApiService::getProperties(),
       "csrf_token" => csrf_token(),
     ]);
   }
