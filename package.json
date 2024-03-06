@@ -1,6 +1,6 @@
 {
     "name": "@clockwork-marketing-dev/module-holiday-park",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Holiday Park module for CMS",
     "scripts": {
         "release": "standard-version"
