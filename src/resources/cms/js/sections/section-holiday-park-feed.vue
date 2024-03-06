@@ -98,20 +98,8 @@ export default {
       fields: null,
       options: [
         {
-          value: 0,
-          text: "Grid View: Categories",
-        },
-        {
           value: 1,
           text: "Grid View: Accommodation",
-        },
-        {
-          value: 2,
-          text: "Slider: Categories",
-        },
-        {
-          value: 3,
-          text: "Slider: Accommodation",
         },
       ],
       categories: [],
