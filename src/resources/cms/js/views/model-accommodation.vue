@@ -198,6 +198,23 @@
           <b-tab title="SEO">
             <c-seo-form v-model="model.base" :sections="model.sections" @touched:url_slug="flags.touchedSlug = true" />
           </b-tab>
+
+          <b-tab title="API Integration">
+            <b-form-group
+              v-if="apiPropertiesLoaded"
+              label="Link to an API Property"
+              label-for="property"
+              description=""
+            >
+              <b-form-select
+                :options="apiProperties"
+                v-model="parkAccommodationModel.apiPropertyId"
+                name="property"
+                value-field="id"
+                text-field="concatenated_property_name"
+              />
+            </b-form-group>
+          </b-tab>
         </b-tabs>
       </div>
       <c-form-submit @save="submit('save')" @apply="submit('apply')" :validator="$validator"></c-form-submit>
@@ -266,9 +283,14 @@ export default {
       },
 
       parkAccommodationModel: {
-        api_accommodation_code: 0,
-        accommodation_id: this.id,
+        id: 0,
+        accommodationId: this.id,
+        apiPropertyId: 0,
+        apiPropertyType: "",
+        text: "",
       },
+
+      apiProperties: [{ id: 0, concatenated_property_name: "None" }],
     }
   },
   watch: {
@@ -324,7 +346,6 @@ export default {
               model: this.price,
             })
             console.log("finished adding price")
-            console.log(this.price)
             this.price = {
               accommodation_id: this.id,
               price: "",
@@ -373,20 +394,18 @@ export default {
         this.pricesReady = true
         console.log("fetched prices")
       }
-
-      console.log(this.prices)
     },
-    async updateOrCreateParkAccommodation() {
+    async updateOrCreateParkAccommodation(accommodationId) {
+      console.log("saving")
+
       let response = await this.$http.post("holiday-park/park-accommodation/model", {
         _method: "POST",
         model: this.parkAccommodationModel,
       })
-      console.log(response.data)
+
       if (response.data.parkAccommodation) {
-        this.parkAccommodationModel = response.data.parkAccommodation
+        this.parkAccommodationModel.id = response.data.parkAccommodation.id
       }
-      
-      
     },
     submit(event) {
       ;(async () => {
@@ -397,9 +416,10 @@ export default {
               _method: "POST",
               model: this.model,
             })
-            this.parkAccommodationModel.accommodation_id = response.data.id
 
-            this.updateOrCreateParkAccommodation(response.data)
+            this.parkAccommodationModel.accommodationId = response.data.id
+
+            this.updateOrCreateParkAccommodation(response.data.id)
 
             if (event == "save") {
               this.$router.push("/holiday-park")
@@ -421,7 +441,7 @@ export default {
               model: this.model,
             })
 
-            this.updateOrCreateParkAccommodation(response.data)
+            this.updateOrCreateParkAccommodation(this.model.id)
 
             if (event == "save") {
               this.$router.push("/holiday-park")
@@ -435,8 +455,28 @@ export default {
         }
       })()
     },
+    getApiProperties() {
+      ;(async () => {
+        try {
+          // Fetch model data
+
+          const response = await this.$http.get("holiday-park/park-accommodation/api-properties")
+          const properties = response.data.properties
+          properties.forEach((property) => {
+            this.apiProperties.push(property)
+          })
+          if (properties.length > 1) {
+            this.parkAccommodationModel.apiPropertyType = properties[1].class_name
+          }
+        } catch (error) {
+          console.error(error)
+          this.failed = true
+        }
+      })()
+    },
   },
   mounted() {
+    this.apiPropertiesLoaded = false
     /**
      * Fetch tags for tag dropdown
      */
@@ -498,10 +538,16 @@ export default {
       ;(async () => {
         try {
           const response = await this.$http.get("holiday-park/park-accommodation/findByAccommodationId/" + this.id)
-
           if (response.data.parkAccommodation) {
-            this.parkAccommodationModel = response.data.parkAccommodation
+            this.parkAccommodationModel = {
+              id: response.data.parkAccommodation.id,
+              apiPropertyId: response.data.parkAccommodation.property[0].id,
+              apiPropertyType: response.data.parkAccommodation.property[0].class_name,
+              text: "",
+              accommodationId: this.id
+            }
           }
+          console.log(response.data)
         } catch (error) {
           console.error(error)
           this.failed = true
@@ -510,6 +556,9 @@ export default {
     } else {
       this.ready = true
     }
+
+    this.getApiProperties()
+    this.apiPropertiesLoaded = true
   },
 }
 </script>
