@@ -24,10 +24,13 @@ class ParkAccommodationController extends CmsController
     if (!empty($accommodationId)) {
       $parkAccommodation = HolidayParkApiService::getParkAccommodationByAccommodationId($accommodationId);
       $accommodation = Accommodation::find($accommodationId);
-      return view($this->getViewName("holiday-park.book"), [
-        "parkAccommodation" => $parkAccommodation,
-        "accommodation" => $accommodation
-      ]);
+      
+      if (!empty($parkAccommodation) && !empty($accommodation)) {
+        return view($this->getViewName("holiday-park.book"), [
+          "parkAccommodation" => $parkAccommodation,
+          "accommodation" => $accommodation
+        ]);
+      }
     }
     abort(404);
   }
