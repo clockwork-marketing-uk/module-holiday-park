@@ -36,6 +36,5 @@ Route::prefix("/cms/api/holiday-park/park-accommodation")
 
     Route::get('/api-properties', [ApiParkAccommodationController::class, 'getApiProperties']);
 
-
-    
+    Route::get('/types', [ApiParkAccommodationController::class, 'getTypes']);    
   });
