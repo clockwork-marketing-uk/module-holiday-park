@@ -1,5 +1,8 @@
 import viewIndex from "./views/index";
-import viewModelParkAccommodation from "./views/model-park-accommodation";
+import viewModelParkAccommodation from "./views/model-accommodation";
+import viewModelParkAccommodationCategory from "./views/model-category";
+import viewModelFacility from "./views/model-facility";
+import viewModelPrice from "./views/model-price";
 
 const routes = [
   {
@@ -13,7 +16,7 @@ const routes = [
     },
   },
   {
-    path: "/holiday-park/park-accommodation/:id",
+    path: "/holiday-park/park-accommodation/model/:id",
     component: viewModelParkAccommodation,
     props: true,
     meta: {
@@ -23,26 +26,49 @@ const routes = [
       },
     },
   },
-  // {
-  //   path: "/holiday-park/park-accommodation/:id",
-  //   component: viewModelParkAccommodationCategory,
-  //   props: true,
-  //   meta: {
-  //     breadcrumbs: {
-  //       label: "Category",
-  //       parent: "holiday-park",
-  //     },
-  //   },
-  // },
+  {
+    path: "/holiday-park/park-accommodation/category/:id",
+    component: viewModelParkAccommodationCategory,
+    props: true,
+    meta: {
+      breadcrumbs: {
+        label: "Accommodation Category",
+        parent: "holiday-park",
+      },
+    },
+  },
+  {
+    path: "/holiday-park/park-accommodation/facility/:id",
+    component: viewModelFacility,
+    props: true,
+    meta: {
+      breadcrumbs: {
+        label: "Facility",
+        parent: "holiday-park",
+      },
+    },
+  },
+  {
+    path: "holiday-park/park-accommodation/model/:accommodation_id/price/model/:price_id",
+    component: viewModelPrice,
+    props: true,
+    meta: {
+      breadcrumbs: {
+        label: "Price Option",
+        parent: "holiday-park",
+      },
+    },
+  },
 ];
 
 const cmsMenus = [
   {
-    label: "Park Accommodation",
-    icon: "bed-front",
-    route: "/park-accommodation",
+    label: "Holiday Park",
+    icon: "caravan",
+    route: "/holiday-park",
     phpNamespace: "clockwork\\holidaypark",
   },
 ];
 
 export { routes, cmsMenus };
+

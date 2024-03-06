@@ -1,7 +1,7 @@
 <template>
   <c-portlet :ready="ready">
     <template v-slot:header>
-      <c-module-header title="Accommodation Module" />
+      <c-module-header title="Holiday Park Module" />
     </template>
     <template v-slot:body>
       <c-module-sub-header v-if="isNewRecord" title="Create new accommodation" />
@@ -23,7 +23,13 @@
             <b-form-group label="Tagline">
               <b-form-input type="text" v-model="model.tagline" />
             </b-form-group>
-            <b-form-group v-if="$root.getSetting('accommodation_pricing_options_enabled') && $root.getSetting('accommodation_pricing_options_enabled') == 1" label="From Price">
+            <b-form-group
+              v-if="
+                $root.getSetting('accommodation_pricing_options_enabled') &&
+                $root.getSetting('accommodation_pricing_options_enabled') == 1
+              "
+              label="From Price"
+            >
               <b-form-input type="number" v-model="model.price" name="price" data-vv-as="Price" />
             </b-form-group>
             <b-form-group label="Category *" :invalid-feedback="errors.first('category')">
@@ -62,7 +68,13 @@
             <b-form-group label="Booking URL">
               <b-form-input type="text" v-model="model.booking_url" />
             </b-form-group>
-            <b-form-group v-if="$root.getSetting('accommodation_floor_plan_enabled') && $root.getSetting('accommodation_floor_plan_enabled') == 1" label="Floor Plan">
+            <b-form-group
+              v-if="
+                $root.getSetting('accommodation_floor_plan_enabled') &&
+                $root.getSetting('accommodation_floor_plan_enabled') == 1
+              "
+              label="Floor Plan"
+            >
               <c-media-document-picker v-model="model.floor_plan" />
             </b-form-group>
             <b-form-group label="Enabled" label-for="active" description="Whether this accommodation is enabled or not">
@@ -186,6 +198,23 @@
           <b-tab title="SEO">
             <c-seo-form v-model="model.base" :sections="model.sections" @touched:url_slug="flags.touchedSlug = true" />
           </b-tab>
+
+          <b-tab title="API Integration">
+            <b-form-group
+              v-if="apiPropertiesLoaded"
+              label="Link to an API Property"
+              label-for="property"
+              description=""
+            >
+              <b-form-select
+                :options="apiProperties"
+                v-model="parkAccommodationModel.apiPropertyId"
+                name="property"
+                value-field="id"
+                text-field="concatenated_property_name"
+              />
+            </b-form-group>
+          </b-tab>
         </b-tabs>
       </div>
       <c-form-submit @save="submit('save')" @apply="submit('apply')" :validator="$validator"></c-form-submit>
@@ -252,6 +281,16 @@ export default {
       flags: {
         touchedSlug: false,
       },
+
+      parkAccommodationModel: {
+        id: 0,
+        accommodationId: this.id,
+        apiPropertyId: 0,
+        apiPropertyType: "",
+        text: "",
+      },
+
+      apiProperties: [{ id: 0, concatenated_property_name: "None" }],
     }
   },
   watch: {
@@ -307,7 +346,6 @@ export default {
               model: this.price,
             })
             console.log("finished adding price")
-            console.log(this.price)
             this.price = {
               accommodation_id: this.id,
               price: "",
@@ -356,8 +394,18 @@ export default {
         this.pricesReady = true
         console.log("fetched prices")
       }
+    },
+    async updateOrCreateParkAccommodation(accommodationId) {
+      console.log("saving")
 
-      console.log(this.prices)
+      let response = await this.$http.post("holiday-park/park-accommodation/model", {
+        _method: "POST",
+        model: this.parkAccommodationModel,
+      })
+
+      if (response.data.parkAccommodation) {
+        this.parkAccommodationModel.id = response.data.parkAccommodation.id
+      }
     },
     submit(event) {
       ;(async () => {
@@ -369,10 +417,14 @@ export default {
               model: this.model,
             })
 
+            this.parkAccommodationModel.accommodationId = response.data.id
+
+            this.updateOrCreateParkAccommodation(response.data.id)
+
             if (event == "save") {
-              this.$router.push("/accommodation")
+              this.$router.push("/holiday-park")
             } else {
-              this.$router.push("/accommodation/model/" + response.data.id)
+              this.$router.push("/holiday-park/park-accommodation/model/" + response.data.id)
               this.model.id = response.data.id
               this.price.accommodation_id = response.data.id
 
@@ -389,8 +441,10 @@ export default {
               model: this.model,
             })
 
+            this.updateOrCreateParkAccommodation(this.model.id)
+
             if (event == "save") {
-              this.$router.push("/accommodation")
+              this.$router.push("/holiday-park")
             } else {
               this.model = response.data.accommodation
               this.$bvToast.toast(this.model.base.title + " has been saved.", this.$root.toastSettings.success)
@@ -401,8 +455,28 @@ export default {
         }
       })()
     },
+    getApiProperties() {
+      ;(async () => {
+        try {
+          // Fetch model data
+
+          const response = await this.$http.get("holiday-park/park-accommodation/api-properties")
+          const properties = response.data.properties
+          properties.forEach((property) => {
+            this.apiProperties.push(property)
+          })
+          if (properties.length > 1) {
+            this.parkAccommodationModel.apiPropertyType = properties[1].class_name
+          }
+        } catch (error) {
+          console.error(error)
+          this.failed = true
+        }
+      })()
+    },
   },
   mounted() {
+    this.apiPropertiesLoaded = false
     /**
      * Fetch tags for tag dropdown
      */
@@ -461,9 +535,30 @@ export default {
           this.failed = true
         }
       })()
+      ;(async () => {
+        try {
+          const response = await this.$http.get("holiday-park/park-accommodation/findByAccommodationId/" + this.id)
+          if (response.data.parkAccommodation) {
+            this.parkAccommodationModel = {
+              id: response.data.parkAccommodation.id,
+              apiPropertyId: response.data.parkAccommodation.property[0].id,
+              apiPropertyType: response.data.parkAccommodation.property[0].class_name,
+              text: "",
+              accommodationId: this.id
+            }
+          }
+          console.log(response.data)
+        } catch (error) {
+          console.error(error)
+          this.failed = true
+        }
+      })()
     } else {
       this.ready = true
     }
+
+    this.getApiProperties()
+    this.apiPropertiesLoaded = true
   },
 }
 </script>

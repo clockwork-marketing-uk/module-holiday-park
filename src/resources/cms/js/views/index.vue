@@ -1,18 +1,18 @@
 <template>
   <c-portlet>
     <template v-slot:header>
-      <c-module-header title="Accommodation Module" />
+      <c-module-header title="Holiday Park Module" />
     </template>
     <template v-slot:body>
       <b-tabs>
-        <b-tab title="Accommodation" :active="activeTab == 'accommodation'">
+        <b-tab title="Park Accommodation" :active="activeTab == 'accommodation'">
           <c-module-sub-header title="Categories">
-            <b-button to="/accommodation/category/0" variant="dark">Create category</b-button>
+            <b-button to="/holiday-park/park-accommodation/category/0" variant="dark">Create category</b-button>
           </c-module-sub-header>
 
           <c-listgrid
             ref="listgridCategories"
-            baseRoute="accommodation"
+            baseRoute="holiday-park/park-accommodation"
             itemRoute="category"
             dataSource="accommodation/category"
             @deleteItem="deleteCategory"
@@ -21,12 +21,12 @@
           />
 
           <c-module-sub-header title="Accommodation" class="mt-4">
-            <b-button to="/accommodation/model/0" variant="dark">Create Accommodation</b-button>
+            <b-button to="/holiday-park/park-accommodation/model/0" variant="dark">Create Accommodation</b-button>
           </c-module-sub-header>
 
           <c-listgrid
             ref="listgridCategoriesAccommodation"
-            baseRoute="accommodation"
+            baseRoute="holiday-park/park-accommodation"
             itemRoute="category"
             dataSource="accommodation/category/accommodation"
             :can-reorder="false"
@@ -36,7 +36,7 @@
           >
             <template v-slot:default="item">
               <c-listgrid
-                baseRoute="accommodation"
+                baseRoute="holiday-park/park-accommodation"
                 itemRoute="model"
                 :itemData="item.item.accommodation"
                 :canReorder="true"
@@ -49,12 +49,12 @@
         </b-tab>
         <b-tab title="Facilities" :active="activeTab == 'facilities'">
           <c-module-sub-header title="Facilities" class="mt-4">
-            <b-button to="/accommodation/facility/0" variant="dark">Create facility</b-button>
+            <b-button to="/holiday-park/park-accommodation/facility/0" variant="dark">Create facility</b-button>
           </c-module-sub-header>
 
           <c-listgrid
             ref="listgridFacilities"
-            baseRoute="accommodation"
+            baseRoute="holiday-park/park-accommodation"
             itemRoute="facility"
             dataSource="accommodation/facility"
             @deleteItem="deleteFacility"
@@ -97,6 +97,14 @@ export default {
         .delete("accommodation/model/" + accommodation.id)
         .then((response) => {
           this.refresh()
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+
+      this.$http
+        .delete("holiday-park/park-accommodation/model/" + accommodation.id)
+        .then((response) => {
         })
         .catch((error) => {
           console.error(error)

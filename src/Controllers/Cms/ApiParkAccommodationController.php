@@ -2,9 +2,11 @@
 
 namespace Clockwork\HolidayPark\Controllers\Cms;
 
-use Clockwork\Core\Abstracts\CmsController;
-use Clockwork\HolidayPark\Repositories\ParkAccommodationRepository;
 use Illuminate\Http\Request;
+use Clockwork\Core\Abstracts\CmsController;
+use Clockwork\HolidayPark\Models\ParkAccommodation;
+use Clockwork\HolidayPark\Services\HolidayParkApiService;
+use Clockwork\HolidayPark\Repositories\ParkAccommodationRepository;
 
 class ApiParkAccommodationController extends CmsController
 {
@@ -37,28 +39,23 @@ class ApiParkAccommodationController extends CmsController
   public function store(Request $request)
   {
     $request->validate($this->parkAccommodationRepository->getValidationRules());
-    $id = $this->parkAccommodationRepository->store($request->model);
+
+    $parkAccommodation = $this->parkAccommodationRepository->updateOrCreate($request->model);
 
     return response()->json([
-      "id" => $id,
+      "parkAccommodation" => $parkAccommodation,
       "csrf_token" => csrf_token(),
     ]);
   }
 
   public function update(Request $request, $id)
   {
-    $request->validate($this->parkAccommodationRepository->getValidationRules());
-
-    $this->parkAccommodationRepository->update($id, $request->model);
-
-    return response()->json([
-      "csrf_token" => csrf_token(),
-    ]);
+    $this->store($request);
   }
 
-  public function destroy($id)
+  public function destroy($accommodatonId)
   {
-    $this->parkAccommodationRepository->delete($id);
+    $this->parkAccommodationRepository->delete($accommodatonId);
   }
 
   public function reorder(Request $request)
@@ -70,5 +67,19 @@ class ApiParkAccommodationController extends CmsController
 
       $this->parkAccommodationRepository->update($item["id"], $attrs);
     }
+  }
+
+  public function findByAccommodationId($accommodationId) {
+    return response()->json([
+      "parkAccommodation" => HolidayParkApiService::getParkAccommodationByAccommodationId($accommodationId),
+      "csrf_token" => csrf_token(),
+    ]);
+  }
+
+  public function getApiProperties() {
+    return response()->json([
+      "properties" => HolidayParkApiService::getProperties(),
+      "csrf_token" => csrf_token(),
+    ]);
   }
 }

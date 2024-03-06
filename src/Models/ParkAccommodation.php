@@ -2,66 +2,31 @@
 
 namespace Clockwork\HolidayPark\Models;
 
-use Illuminate\Support\Str;
-use Clockwork\Core\Models\Base;
-use Clockwork\Core\Traits\Sectionable;
-use Clockwork\Core\Abstracts\BaseModel;
+use Clockwork\EliteParks\Models\Property;
+use Clockwork\Core\Abstracts\GenericModel;
+use Clockwork\Accommodation\Models\Accommodation;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-class ParkAccommodation extends BaseModel
+class ParkAccommodation extends GenericModel
 {
-  use Sectionable;
-
   protected $table = "park_accommodations";
-  protected $with = ["base", "images"];
+  protected $with = ['accommodation', 'accommodation', 'property'];
+  protected $fillable = ["text"];
 
-  protected $fillableRelations = [
-    "images" => [
-      "type" => "morphMany",
-      "ref" => "park_accommodation_image",
-    ],
-  ];
+  public function accommodationable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 
-  /**
-   * The attributes that are mass assignable.
-   *
-   * @var array
-   */
-  protected $fillable = [
-    "title",
-    "text",
-    "page_enabled",
-    "sections",
-  ];
+  public function accommodation(): MorphToMany
+    {
+        return $this->morphedByMany(Accommodation::class, 'park_accommodationable');
+    }
 
-  /**
-   * The attributes that should be hidden for arrays.
-   *
-   * @var array
-   */
-  protected $hidden = [];
+    public function property(): MorphToMany
+    {
+        return $this->morphedByMany(Property::class, 'park_accommodationable');
+    }
 
-  public function images()
-  {
-    return $this->getSectionImages("accommodation_image");
-  }
-
-  public function base()
-  {
-    return $this->morphOne(Base::class, "baseable");
-  }
-
-  /**
-   * Scope a query to return based on sort_order column.
-   *
-   * @param mixed $query
-   */
-  public function scopeOrdered($query)
-  {
-    return $query->orderBy("sort_order", "asc");
-  }
-
-  public function getFullUrl($base_model)
-  {
-    return route("accommodation.accommodation", ["slug" => $base_model->url_slug], false);
-  }
 }

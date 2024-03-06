@@ -4,10 +4,18 @@ namespace Clockwork\HolidayPark;
 
 use Clockwork\Core\CmsModuleConfig;
 use Clockwork\Core\Abstracts\CmsModule;
+use Clockwork\HolidayPark\Contracts\PriceInterface;
+use Clockwork\HolidayPark\Contracts\FacilityInterface;
+use Clockwork\HolidayPark\Repositories\PriceRepository;
 use Clockwork\HolidayPark\Services\HolidayParkApiService;
+use Clockwork\HolidayPark\Repositories\FacilityRepository;
 use Clockwork\HolidayPark\Interfaces\HolidayParkApiInterface;
 use Clockwork\HolidayPark\Interfaces\ParkAccommodationInterface;
+use Clockwork\HolidayPark\Contracts\ParkAccommodationTagInterface;
 use Clockwork\HolidayPark\Repositories\ParkAccommodationRepository;
+use Clockwork\HolidayPark\Repositories\ParkAccommodationTagRepository;
+use Clockwork\HolidayPark\Contracts\ParkAccommodationCategoryInterface;
+use Clockwork\HolidayPark\Repositories\ParkAccommodationCategoryRepository;
 
 class HolidayParkCmsModule extends CmsModule
 {
