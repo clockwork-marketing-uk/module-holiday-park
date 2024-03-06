@@ -16,7 +16,7 @@ try {
 
 Route::prefix($holiday_park_prefix)->group(function () {
   // Route::get("category/{slug}", [ParkAccommodationCategoryController::class, "category"])->name("park-accommodation.category");
-  Route::get("/{slug}", [ParkAccommodationController::class, "accommodation"])->name("park-accommodation.accommodation");
+  // Route::get("/{slug}", [ParkAccommodationController::class, "accommodation"])->name("park-accommodation.accommodation");
 });
 
 Route::prefix("/cms/api/holiday-park/park-accommodation")
@@ -33,6 +33,8 @@ Route::prefix("/cms/api/holiday-park/park-accommodation")
     Route::delete('/model/{accommodatonId}', [ApiParkAccommodationController::class, 'destroy']);
 
     Route::get('/findByAccommodationId/{accommodatonId}', [ApiParkAccommodationController::class, 'findByAccommodationId']);
+
+    Route::get('/api-properties', [ApiParkAccommodationController::class, 'getApiProperties']);
 
 
     
