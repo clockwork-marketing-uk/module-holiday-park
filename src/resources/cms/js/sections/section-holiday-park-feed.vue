@@ -54,11 +54,29 @@
 
       <b-form-group
         v-if="fields.category == 0 && fields.mode != 0 && fields.mode != 2"
-        label="Show Filter Buttons"
+        label="Show Category Filter Buttons"
         label-for="active"
-        description="Show filter buttons at the top?"
+        description="Show category buttons at the top?"
       >
         <b-form-checkbox switch name="filter" v-model="fields.showFilter" :value="1" :unchecked-value="0" />
+      </b-form-group>
+
+      <b-form-group
+        v-if="$root.getSetting('accommodation_has_info_bar') == 1"
+        label="Show Info Bar"
+        label-for="info-bar"
+        description="Show info bar at the top?"
+      >
+        <b-form-checkbox switch name="inf-bar" v-model="fields.showInfoBar" :value="1" :unchecked-value="0" />
+      </b-form-group>
+
+      <b-form-group
+        v-if="$root.getSetting('accommodation_has_tags')"
+        label="Show Tag Filter Buttons"
+        label-for="tags"
+        description="Show tag buttons at the top?"
+      >
+        <b-form-checkbox switch name="tags" v-model="fields.showTags" :value="1" :unchecked-value="0" />
       </b-form-group>
 
       <b-form-group label="Enabled" label-for="active" description="Whether this section is enabled or not">
@@ -72,28 +90,16 @@
 
 <script>
 export default {
-  name: "section-accommodation-feed",
-  props: ["title", "display_title", "mode", "showFilter", "category", "devices", "active"],
+  name: "section-holiday-park-feed",
+  props: ["title", "display_title", "mode", "showFilter", "showTags", "showInfoBar", "category", "devices", "active"],
 
   data() {
     return {
       fields: null,
       options: [
         {
-          value: 0,
-          text: "Grid View: Categories",
-        },
-        {
           value: 1,
           text: "Grid View: Accommodation",
-        },
-        {
-          value: 2,
-          text: "Slider: Categories",
-        },
-        {
-          value: 3,
-          text: "Slider: Accommodation",
         },
       ],
       categories: [],

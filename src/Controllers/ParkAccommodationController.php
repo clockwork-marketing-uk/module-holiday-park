@@ -4,6 +4,8 @@ namespace Clockwork\HolidayPark\Controllers;
 
 use Illuminate\Http\Request;
 use Clockwork\Core\Abstracts\CmsController;
+use Clockwork\Accommodation\Models\Accommodation;
+use Clockwork\HolidayPark\Services\HolidayParkApiService;
 use Clockwork\HolidayPark\Repositories\ParkAccommodationRepository;
 
 class ParkAccommodationController extends CmsController
@@ -16,17 +18,20 @@ class ParkAccommodationController extends CmsController
     $this->module = "holidaypark";
   }
 
-  public function accommodation(Request $request)
+  public function book(Request $request)
   {
-    $request_uri = strtok($request->getRequestUri(), "?");
-
-    $url_slug = preg_split("/\//", $request_uri);
-
-    $parkAccommodation = $this->parkAccommodationRepository->getByBaseAttribute("url_slug", $url_slug[2]);
-
-    if (!$parkAccommodation) {
-      abort(404);
+    $accommodationId = $request->query('id') ?? null;
+    if (!empty($accommodationId)) {
+      $parkAccommodation = HolidayParkApiService::getParkAccommodationByAccommodationId($accommodationId);
+      $accommodation = Accommodation::find($accommodationId);
+      
+      if (!empty($parkAccommodation) && !empty($accommodation)) {
+        return view($this->getViewName("holiday-park.book"), [
+          "parkAccommodation" => $parkAccommodation,
+          "accommodation" => $accommodation
+        ]);
+      }
     }
-    return view($this->getViewName("holiday-park.page"), ["parkAccommodation" => $parkAccommodation]);
+    abort(404);
   }
 }

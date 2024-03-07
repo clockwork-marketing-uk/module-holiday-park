@@ -4,16 +4,16 @@ namespace Clockwork\HolidayPark;
 
 use Clockwork\Core\Abstracts\PageSection;
 
-class SectionFeed extends PageSection
+class SectionHolidayParkFeed extends PageSection
 {
   public static function getConfig()
   {
     return [
       "fields" => [
-        "title" => "Feed",
+        "title" => "Holiday Park Feed",
       ],
-      "sectionName" => "Feed",
-      "view" => "section-feed",
+      "sectionName" => "Holiday Park Feed",
+      "view" => "section-holiday-park-feed",
       "icon" => "bed-front",
       "type" => "feed",
     ];
@@ -27,6 +27,6 @@ class SectionFeed extends PageSection
     $sections = [
       __DIR__ . "/resources/views/sections" => base_path("resources/views/sections"),
     ];
-    // $this->publishes($sections, "public");
+    $this->publishes($sections, "public");
   }
 }
