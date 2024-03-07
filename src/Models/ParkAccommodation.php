@@ -11,22 +11,25 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 class ParkAccommodation extends GenericModel
 {
   protected $table = "park_accommodations";
-  protected $with = ['accommodation', 'accommodation', 'property'];
-  protected $fillable = ["text"];
+  protected $with = ['accommodation', 'accommodation', 'property', 'type'];
+  protected $fillable = ["text", "park_accommodation_type_id"];
 
   public function accommodationable(): MorphTo
-    {
-        return $this->morphTo();
-    }
+  {
+    return $this->morphTo();
+  }
 
   public function accommodation(): MorphToMany
-    {
-        return $this->morphedByMany(Accommodation::class, 'park_accommodationable');
-    }
+  {
+    return $this->morphedByMany(Accommodation::class, 'park_accommodationable');
+  }
 
-    public function property(): MorphToMany
-    {
-        return $this->morphedByMany(Property::class, 'park_accommodationable');
-    }
+  public function property(): MorphToMany
+  {
+    return $this->morphedByMany(Property::class, 'park_accommodationable');
+  }
 
+  public function type() {
+    return $this->belongsTo(ParkAccommodationType::class, 'park_accommodation_type_id', 'id');
+  }
 }

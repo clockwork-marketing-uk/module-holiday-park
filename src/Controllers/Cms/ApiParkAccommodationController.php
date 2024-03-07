@@ -5,6 +5,7 @@ namespace Clockwork\HolidayPark\Controllers\Cms;
 use Illuminate\Http\Request;
 use Clockwork\Core\Abstracts\CmsController;
 use Clockwork\HolidayPark\Models\ParkAccommodation;
+use Clockwork\HolidayPark\Models\ParkAccommodationType;
 use Clockwork\HolidayPark\Services\HolidayParkApiService;
 use Clockwork\HolidayPark\Repositories\ParkAccommodationRepository;
 
@@ -79,6 +80,13 @@ class ApiParkAccommodationController extends CmsController
   public function getApiProperties() {
     return response()->json([
       "properties" => HolidayParkApiService::getProperties(),
+      "csrf_token" => csrf_token(),
+    ]);
+  }
+
+  public function getTypes() {
+    return response()->json([
+      "types" => ParkAccommodationType::all(),
       "csrf_token" => csrf_token(),
     ]);
   }

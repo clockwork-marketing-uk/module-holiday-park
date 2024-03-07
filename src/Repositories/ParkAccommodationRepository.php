@@ -39,7 +39,12 @@ class ParkAccommodationRepository extends CmsGenericRepository implements ParkAc
 
   public function updateOrCreate(array $attributes)
   {
-    $parkAccommodation = ParkAccommodation::updateOrCreate(["id" => $attributes["id"]], []);
+    $parkAccommodation = ParkAccommodation::find($attributes['id']);
+    if (!$parkAccommodation) {
+      $parkAccommodation = ParkAccommodation::create();
+    }
+
+    $parkAccommodation->update(['park_accommodation_type_id' => $attributes['type']]);
 
     $parkAccommodationable = ParkAccommodationable::where("park_accommodation_id", $parkAccommodation->id)
       ->where("park_accommodationable_type", $attributes["apiPropertyType"]);
