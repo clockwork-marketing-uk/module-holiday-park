@@ -44,9 +44,14 @@ class HolidayParkCmsModule extends CmsModule
         $css = [
           __DIR__ . "/resources/css" => base_path("resources/css"),
         ];
+
+        $js = [
+          __DIR__ . "/resources/js" => base_path("resources/js"),
+        ];
         $this->loadResources(__DIR__);
-        $this->publishes($views, "bespoke");
+        $this->publishes($views, "public");
         $this->publishes($css, "public");
+        $this->publishes($js, "public");
     }
 
     public static function getConfig()

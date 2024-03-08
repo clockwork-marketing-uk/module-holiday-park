@@ -27,8 +27,8 @@ class HolidayParkApiService implements HolidayParkApiInterface
 
         return $accommodationData;
       }
-      public function getAvailabilityData() {
-        return collect([]);
+      public static function findAvailability($params) {
+        return EliteParks::findAvailability($params);
       }
 
       public static function getProperties() {

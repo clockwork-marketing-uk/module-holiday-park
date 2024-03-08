@@ -6,6 +6,7 @@ use Clockwork\Accommodation\Models\Accommodation;
 use Clockwork\Core\Abstracts\CmsGenericRepository;
 use Clockwork\HolidayPark\Models\ParkAccommodation;
 use Clockwork\HolidayPark\Models\ParkAccommodationable;
+use Clockwork\HolidayPark\Models\ParkAccommodationType;
 use Clockwork\HolidayPark\Contracts\ParkAccommodationInterface;
 
 class ParkAccommodationRepository extends CmsGenericRepository implements ParkAccommodationInterface
@@ -13,6 +14,21 @@ class ParkAccommodationRepository extends CmsGenericRepository implements ParkAc
   public function __construct()
   {
     parent::__construct(new ParkAccommodation());
+  }
+
+  public function allRelatedAccommodation () {
+    $parkAccommodations = $this->modelClass::all();
+    $accommodations = collect([]);
+    foreach ($parkAccommodations as $parkAccommodation) {
+      if (!empty($parkAccommodation->accommodation) && $parkAccommodation->accommodation->count() > 0) {
+        $accommodations->push($parkAccommodation->accommodation[0]);
+      }
+    }
+    return $accommodations;
+  }
+
+  public function all() {
+    return $this->modelClass::all();
   }
 
   public function updatePivot($id, $category_id, array $attributes)
@@ -73,5 +89,9 @@ class ParkAccommodationRepository extends CmsGenericRepository implements ParkAc
     );
 
     return $parkAccommodation;
+  }
+
+  public function getTypes() {
+    return ParkAccommodationType::all();
   }
 }

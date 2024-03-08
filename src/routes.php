@@ -38,3 +38,6 @@ Route::prefix("/cms/api/holiday-park/park-accommodation")
 
     Route::get('/types', [ApiParkAccommodationController::class, 'getTypes']);    
   });
+
+
+  Route::post('/holiday-park/get-availability', [ApiParkAccommodationController::class, 'findAvailability'])->name('holiday-park.get-availability');
