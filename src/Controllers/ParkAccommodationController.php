@@ -58,7 +58,7 @@ class ParkAccommodationController extends CmsController
 
     if (!empty($availability) && !empty($availability?->data?->Result)) {
       foreach ($availability->data->Result as $stay) {
-        if ($stay && $stay?->{'@attributes'}) {
+        if ($stay?->{'@attributes'}) {
           if ($this->queryParamsMatchStay($stay->{'@attributes'}, $queryParams)) {
             return $stay->{'@attributes'};
           }
