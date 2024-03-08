@@ -5,5 +5,5 @@ namespace Clockwork\HolidayPark\Interfaces;
 interface HolidayParkApiInterface
 {
     public function getAccommodationData();
-    public function getAvailabilityData();
+    public static function findAvailability($params);
 }
