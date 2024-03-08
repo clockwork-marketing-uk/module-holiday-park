@@ -5,6 +5,7 @@ class SearchResultsPage {
         this.propertyList = document.getElementById('property-list')
         this.loadingSpinner = document.getElementById('results-loading-spinner')
         this.bookingType = document.getElementById('booking-type')
+        this.noResultsMessage = document.getElementById('no-results-found-message')
         this.findSearchBarOnPage()
         this.preventFormSubmit()
         this.fetchNewResults()
@@ -56,6 +57,7 @@ class SearchResultsPage {
 
     async fetchNewResults() {
         this.hidePropertyList()
+        this.hideNoResultsMessage()
         this.showLoadingSpinner()
         const results = await this.getResultsFromBackend()
         this.hideLoadingSpinner()
@@ -88,10 +90,14 @@ class SearchResultsPage {
         results.forEach(result => {
             gradeCodesAvailable.push(result['@attributes'].grade_code)
         });
-        console.log(gradeCodesAvailable)
+
+        if (results.length == 0) {
+            this.showNoResultsMessage()
+        }
         
         this.propertyList.querySelectorAll('.accommodation-item').forEach(property => {
-            const gradeCode = property.dataset.code
+            const gradeCode = property.dataset.grade_code
+            const accommodationId = property.dataset.accommodation_id
             const propertyIsAvailable = gradeCodesAvailable.includes(gradeCode)
             if (!propertyIsAvailable) {
                 console.log(gradeCode)
@@ -99,25 +105,25 @@ class SearchResultsPage {
             }
             else {
                 property.style.display = null;
-                this.addBookingInfoToButton(property.querySelector('.booking-button'), gradeCode)
+                const button = property.querySelector('.booking-button')
+                this.addBookingInfoToButton(button, gradeCode, accommodationId)
             }
         });
 
         this.propertyList.classList.remove('hidden')
     }
 
-    addBookingInfoToButton(button, gradeCode) {
+    addBookingInfoToButton(button, gradeCode, accommodationId) {
         let href = button.getAttribute("href") 
-        const urlSearchParams = new URLSearchParams(window.location.search);
-        const params = Object.fromEntries(urlSearchParams.entries());
-        for (const [key, value] of Object.entries(params)) {
-            href = href + `&${key}=${value}`
-        }
-        href = href + `&grade_code=${gradeCode}`
+        const url = new URL(href)
+        let formFields = this.getFieldsFromForm()
+        formFields.id = accommodationId
+        url.search = new URLSearchParams(formFields)
+        url.searchParams.set('grade_code', gradeCode)
         if (this.bookingType && this.bookingType?.value) {
-            href = href + `&booking_type=${this.bookingType.value}`
+            url.searchParams.set('booking_type', this.bookingType.value)
         }
-        button.setAttribute('href', href)
+        button.setAttribute('href', url.toString())
     }
 
     hidePropertyList() {
@@ -143,6 +149,16 @@ class SearchResultsPage {
 
     showLoadingSpinner() {
         this.loadingSpinner.classList.remove('hidden')
+    }
+
+    hideNoResultsMessage() {
+        this.noResultsMessage.classList.remove('flex')
+        this.noResultsMessage.classList.add('hidden')
+    }
+
+    showNoResultsMessage() {
+        this.noResultsMessage.classList.remove('hidden')
+        this.noResultsMessage.classList.add('flex')
     }
 }
 
