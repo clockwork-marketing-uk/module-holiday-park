@@ -92,7 +92,7 @@ class ApiParkAccommodationController extends CmsController
     ]);
   }
 
-  public function getAvailability(Request $request) {
+  public function findAvailability(Request $request) {
     $attributes = $request->all();
     $availability = [];
     if (!empty($attributes)) {

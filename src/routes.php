@@ -40,4 +40,4 @@ Route::prefix("/cms/api/holiday-park/park-accommodation")
   });
 
 
-  Route::post('/holiday-park/get-availability', [ApiParkAccommodationController::class, 'getAvailability'])->name('holiday-park.get-availability');
+  Route::post('/holiday-park/get-availability', [ApiParkAccommodationController::class, 'findAvailability'])->name('holiday-park.get-availability');
