@@ -1,11 +1,11 @@
 @php
-    $code = null;
+    $gradeCode = null;
     if (!empty($card?->parkAccommodation?->property?->first())) {
-        $code = $card->parkAccommodation?->property?->first()?->code ?? null;
+        $gradeCode = $card->parkAccommodation?->property?->first()?->code ?? null;
     }
 @endphp
 
-<div class="accommodation-item" {{ $code ? "data-code=$code" : "" }} x-data="{ currentFilter: '{!! $categories_string !!}', currentTags: '{!! $tags !!}' }"
+<div class="accommodation-item" data-accommodation_id="{{ $card->id }}" {{ $gradeCode ? "data-grade_code=$gradeCode" : "" }} x-data="{ currentFilter: '{!! $categories_string !!}', currentTags: '{!! $tags !!}' }"
             x-show='(filter === "false" || currentFilter.includes(filter)) && (tag === "false" || currentTags.includes(tag))'>
 
             <div class="image-container">
