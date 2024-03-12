@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Clockwork\Settings\Repositories\SettingRepository;
+use Clockwork\HolidayPark\Controllers\BookingController;
+use Clockwork\HolidayPark\Controllers\Api\ApiBookingController;
 use Clockwork\HolidayPark\Controllers\ParkAccommodationController;
 use Clockwork\HolidayPark\Controllers\Cms\ApiParkAccommodationController;
 use Clockwork\HolidayPark\Controllers\ParkAccommodationCategoryController;
@@ -16,7 +18,7 @@ try {
 
 Route::prefix($holiday_park_prefix)->group(function () {
   // Route::get("category/{slug}", [ParkAccommodationCategoryController::class, "category"])->name("park-accommodation.category");
-  Route::get("{title}/book", [ParkAccommodationController::class, "book"])->name("park-accommodation.book");
+  Route::get("{title}/book", [BookingController::class, "book"])->name("park-accommodation.book");
 });
 
 Route::prefix("/cms/api/holiday-park/park-accommodation")
@@ -36,8 +38,16 @@ Route::prefix("/cms/api/holiday-park/park-accommodation")
 
     Route::get('/api-properties', [ApiParkAccommodationController::class, 'getApiProperties']);
 
-    Route::get('/types', [ApiParkAccommodationController::class, 'getTypes']);    
+    Route::get('/types', [ApiParkAccommodationController::class, 'getTypes']);
   });
 
 
-  Route::post('/holiday-park/get-availability', [ApiParkAccommodationController::class, 'findAvailability'])->name('holiday-park.get-availability');
+Route::post('/holiday-park/get-availability', [ApiParkAccommodationController::class, 'findAvailability'])->name('holiday-park.get-availability');
+
+Route::prefix("holiday-park/booking")
+  ->name("holiday-park.booking")
+  ->group(function () {
+    Route::post('/update-contact', [BookingController::class, 'updateContact'])->name('.update-contact');
+    Route::post('/update-extras', [ApiBookingController::class, 'updateExtras'])->name('.update-extras');
+    Route::post('/get-booking', [ApiBookingController::class, 'getBooking'])->name('.get-booking');
+  });
