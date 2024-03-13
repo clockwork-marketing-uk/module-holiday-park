@@ -1,6 +1,6 @@
 
 
-<div id="booking-info" class="hidden w-2/3 mx-auto sm:mx-none">
+<div id="booking-info" class="hidden w-2/3 mx-auto sm:mx-none" data-update_contact_route="{{ route('holiday-park.booking.update-contact') }}">
     <form>
         <div class="mx-auto space-y-12">
             <div class="pb-6">
@@ -27,10 +27,10 @@
                     </div>
 
                     <div class="sm:col-span-2">
-                        <label for="contact_no" class="block text-sm font-medium leading-6 text-gray-900">Phone Number
+                        <label for="mobile_phone_no" class="block text-sm font-medium leading-6 text-gray-900">Phone Number
                         </label>
                         <div class="mt-2">
-                            <input type="tel" name="contact_no" id="contact_no" autocomplete="given-name"
+                            <input type="tel" name="mobile_phone_no" id="mobile_phone_no" autocomplete="given-name"
                                 pattern="^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$"
                                 class="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6">
                         </div>

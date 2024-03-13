@@ -97,5 +97,15 @@ class HolidayParkApiService implements HolidayParkApiInterface
     }
     return null;
   }
+
+  public static function updateContact($booking_no, $contactInfo) {
+    if ( !empty($booking_no) && !empty($contactInfo) ) {
+      $response = EliteParks::updateContact($booking_no, $contactInfo);
+      if (!empty($response)) {
+        return $response;
+      } 
+    }
+    return null;
+  }
   
 }

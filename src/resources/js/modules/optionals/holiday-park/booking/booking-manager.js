@@ -9,6 +9,7 @@ class BookingManager {
         this.extras = this.bookingPage.querySelector('#extras-page')
         this.paymentInfo = this.bookingPage.querySelector('#payment-info')
         this.bookingSummary = this.bookingPage.querySelector('#booking-summary')
+        this.formFeedback = this.bookingPage.querySelector('#form-feedback')
         this.nextButton = this.bookingPage.querySelector('#next-button')
         this.backButton = this.bookingPage.querySelector('#back-button')
         this.bookingStepper = this.bookingPage.querySelector('#booking-stepper')
@@ -19,7 +20,7 @@ class BookingManager {
         this.bookingNo = this.bookingPage.dataset.booking_id
         this.booking = new Booking(this.bookingInfo, this.extras, this.confirmBooking, this.paymentInfo, this.bookingNo)
         this.addEventListenersToButtons()
-        this.changeState(1, true)
+        this.goToNextStage(1)
         console.log(this.currentState)
     }
 
@@ -41,14 +42,13 @@ class BookingManager {
         if (this.currentState < this.bookingStatesSize) {
             this.changeState(1)
         }
-        this.scrollToTop()
+        
     }
 
     back() {
         if (this.currentState > 0) {
             this.changeState(-1)
         }
-        this.scrollToTop()
     }
 
     scrollToTop() {
@@ -96,6 +96,7 @@ class BookingManager {
     }
 
     async goToNextStage(value) {
+        this.scrollToTop()
         this.currentState += value
         this.updateButtons()
         updateBookingStepper(this.bookingStepper, this.currentState)
@@ -108,20 +109,28 @@ class BookingManager {
             this.hideElement(this.loadingSpinner)
         }
         this.showElement(this.bookingStates[this.currentState])
+        this.clearFormFeedback()
     }
 
-    async changeState(value, force = false) {
+    async changeState(value) {
         const validation = this.booking.validateFields(this.currentState + 1)
-        if (validation || force) {
+        if (validation.valid) {
             await this.goToNextStage(value)
         }
         else {
-            this.showErrorMessage(validation)
+            this.showFormFeedback(validation)
         }
     }
 
-    showErrorMessage(message) {
-        console.log(message)
+    showFormFeedback(validation) {
+        this.formFeedback.textContent = validation.message
+        validation.fields.forEach(field => {
+            this.formFeedback.textContent += field + " "
+        });
+    }
+
+    clearFormFeedback() {
+        this.formFeedback.textContent = ""
     }
 }
 

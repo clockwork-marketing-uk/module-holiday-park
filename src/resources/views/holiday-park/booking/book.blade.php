@@ -20,6 +20,10 @@
             @include('holidaypark::holiday-park.booking.stages.payment-info')
         </div>
 
+        <div class="flex justify-center" id="form-feedback">
+            
+        </div>
+
         <div class="flex justify-center my-6 gap-x-4">
             <div class="flex flex-row bg-gray-300 cursor-pointer btn" id="back-button">
                 <i class="my-auto cursor-pointer fal fa-arrow-left-long"></i>

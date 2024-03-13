@@ -5,13 +5,13 @@ async function query(url, bookingNumber, data = null) {
         data: data
     }
 
-    const extraWithPrice = await axios.post(url, payload).then(
+    const response = await axios.post(url, payload).then(
         response => {
         return response.data ?? null
         },
         error => {},
     )
-    return extraWithPrice
+    return response
 }
 
 export { query }

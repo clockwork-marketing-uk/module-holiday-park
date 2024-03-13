@@ -47,7 +47,7 @@ Route::post('/holiday-park/get-availability', [ApiParkAccommodationController::c
 Route::prefix("holiday-park/booking")
   ->name("holiday-park.booking")
   ->group(function () {
-    Route::post('/update-contact', [BookingController::class, 'updateContact'])->name('.update-contact');
+    Route::post('/update-contact', [ApiBookingController::class, 'updateContact'])->name('.update-contact');
     Route::post('/update-extras', [ApiBookingController::class, 'updateExtras'])->name('.update-extras');
     Route::post('/get-booking', [ApiBookingController::class, 'getBooking'])->name('.get-booking');
   });

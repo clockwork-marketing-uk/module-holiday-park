@@ -17,12 +17,22 @@ class ConfirmBooking {
         if (this.isCurrentStage(currentStage)) {
             console.log('loading confirm booking page')
             this.bookingInfo = await this.queryApi()
+            let i = 0
+            while (i < this.bookingInfo.length) {
+                
+            }
+
+            this.showBookingInfo()
         }
     }
 
     async queryApi() {
         const URL = this.confirmBooking.dataset.get_booking_route
         return await query(URL, this.bookingNo)
+    }
+
+    showBookingInfo() {
+        this.confirmBooking.innerHTML = this.bookingInfo.booking.booking_no
     }
 
     isCurrentStage(currentStage) {

@@ -8,7 +8,7 @@ import { validate } from './validator'
 
 class Booking {
     constructor(bookingInfoForm, extrasForm, confirmBooking, paymentForm, bookingNo) {
-        this.contact = new Contact(bookingInfoForm)
+        this.contact = new Contact(bookingInfoForm, bookingNo)
         this.extras = new Extras(extrasForm, bookingNo)
         this.notes = new Notes(bookingInfoForm)
         this.payment = new Payment(paymentForm)

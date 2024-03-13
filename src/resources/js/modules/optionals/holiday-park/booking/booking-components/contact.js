@@ -1,18 +1,20 @@
 import Field from '../field'
+import { query } from '../api/query'
 
 class Contact {
     fields = []
     stage = 1
 
-    constructor(form) {
+    constructor(form, bookingNo) {
         this.contactForm = form
+        this.bookingNo = bookingNo
         this.createFields()
     }
 
     createFields() {
         this.fields.push(new Field('booking_no', this.contactForm, true, 20))
         // this.fields.push(new Field('original_lead_source_code',this.contactForm, false, 20))
-        this.fields.push(new Field('contact_no',this.contactForm, false, 20))
+        // this.fields.push(new Field('contact_no',this.contactForm, false, 20))
         // this.fields.push(new Field('salutation_code', false, 20))
         this.fields.push(new Field('first_name',this.contactForm, true, 30))
         // this.fields.push(new Field('middle_name', false, 30))
@@ -23,7 +25,7 @@ class Contact {
         this.fields.push(new Field('county',this.contactForm, false, 30))
         this.fields.push(new Field('post_code',this.contactForm, false, 20))
         // this.fields.push(new Field('phone_no', false, 30))
-        // this.fields.push(new Field('mobile_phone_no', false, 30))
+        this.fields.push(new Field('mobile_phone_no', this.contactForm, false, 30))
         // this.fields.push(new Field('fax_no', false, 30))
         this.fields.push(new Field('email',this.contactForm, false, 80))
         // this.fields.push(new Field('booking_agent_code', false, 20))
@@ -33,6 +35,7 @@ class Contact {
     update(currentStage) {
         if (currentStage == this.stage) {
             console.log('updating contact info')
+            return this.updateContactInfo()
         }
     }
 
@@ -41,6 +44,13 @@ class Contact {
             console.log('loading contact page')
         }
     }
+
+    async updateContactInfo() {
+        const URL = this.contactForm.dataset.update_contact_route
+        return await query(URL, this.bookingNo, this.fields)
+    }
+
+
 }
 
 export default Contact

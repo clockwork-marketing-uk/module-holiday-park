@@ -51,4 +51,19 @@ class ApiBookingController extends CmsController
       "csrf_token" => csrf_token(),
     ]);
   }
+
+  public function updateContact(Request $request) {
+    $booking_no = $request?->booking_no;
+    $contactInfo = $request?->data;
+
+    $response = null;
+    if (!empty($booking_no) && !empty($contactInfo)) {
+      $response = HolidayParkApiService::updateContact($booking_no, $contactInfo);
+    }
+    
+    return response()->json([
+      "response" => $response,
+      "csrf_token" => csrf_token(),
+    ]);
+  }
 }
