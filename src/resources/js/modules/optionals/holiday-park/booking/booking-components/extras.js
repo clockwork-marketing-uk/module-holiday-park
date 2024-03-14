@@ -1,27 +1,33 @@
 import Field from '../field'
 import { query } from '../api/query'
+import { getBooking } from '../api/getBooking'
+import { getMasterBookingExtras } from '../api/getMasterBookingExtras'
+import { formatMoney } from '../helpers/formatMoney'
+import { updateBookingSummary } from '../helpers/updateBookingSummary'
 
 class Extras {
     fields = []
     stage = 2
     selectedExtras = []
-    selectedExtrasWithPrices = []
 
-    constructor(form, bookingNo) {
+    constructor(form, bookingNo, bookingSummary) {
         this.extrasForm = form
         this.bookingNo = bookingNo
+        this.masterExtras = this.getMasterBookingExtras()
 
         this.oneOffExtrasSection = this.extrasForm.querySelector('#one-off-extras')
         this.perNightExtrasSection = this.extrasForm.querySelector('#per-night-extras')
 
-        console.log(this.perNightExtrasSection)
         this.oneOffExtrasInputs = this.oneOffExtrasSection.querySelectorAll('select')
         this.perNightExtrasInputs = this.perNightExtrasSection.querySelectorAll('input')
 
         this.addEventListenersToInputs()
+        this.createFields()
     }
 
-    createFields() {
+
+    async getMasterBookingExtras() {
+        return await getMasterBookingExtras()
     }
 
     async update(currentStage) {
@@ -32,51 +38,83 @@ class Extras {
 
     async onLoad(currentStage) {
         if (currentStage == this.stage) {
-            console.log('loading extras page')
+            this.booking = await getBooking(this.bookingNo)
+            if (this.booking.booking.extras) {
+                this.availabileExtras = this.booking.booking.extras
+                this.hideUnusedExtras()
+            }
+            else {
+                this.onLoad(this.currentStage)
+            }
+            
         }
+    }
+
+    createFields() {
+        this.oneOffExtrasInputs.forEach(select => {
+            this.fields.push(new Field(select.name, this.oneOffExtrasSection, false))
+        });
+
+        this.perNightExtrasInputs.forEach(input => {
+            this.fields.push(new Field(input.name, this.perNightExtrasSection, false))
+        });
+    }
+
+    hideUnusedExtras() {
+        this.fields.forEach(field => {
+            const extra = this.availabileExtras.find(extra => field.name === extra.code);
+            if (!extra) {
+                field.htmlElement.parentElement.parentElement.remove()
+            }
+            else {
+                const priceField = field.htmlElement.parentElement.parentElement.querySelector('.price')
+                if (priceField) {
+                    priceField.textContent = formatMoney(extra.unit_price)
+                }
+            }
+        });
     }
 
     addEventListenersToInputs() {
         this.oneOffExtrasInputs.forEach(input => {
             input.addEventListener("change", async (event) => {
-                this.updateSelectedExtras(event)
-                this.selectedExtrasWithPrices = await this.queryApi()
-                this.showSelectedExtrasWithPrices()
+                this.updateSelectedExtras(event.target.dataset.code, event.target.value)
+                await this.updateExtras()
+                updateBookingSummary(this.bookingNo)
+            });
+        });
+
+        this.perNightExtrasInputs.forEach(input => {
+            input.addEventListener("change", async (event) => {
+                const value = event.target.checked ? "1" : "0"
+                this.updateSelectedExtras(event.target.dataset.code, value)
+                await this.updateExtras()
+                updateBookingSummary(this.bookingNo)
             });
         });
     }
 
-    updateSelectedExtras(event) {
+    updateSelectedExtras(code, quantity) {
         const newExtra = {
-            code: event.target.dataset.code,
-            quantity: event.target.value
+            code: code,
+            quantity: quantity
         }
 
         const existingExtraIndex = this.selectedExtras.findIndex(extra => extra.code == newExtra.code);
         if (existingExtraIndex !== -1) {
-            if (newExtra.quantity !== "0") {
-                this.selectedExtras[existingExtraIndex] = newExtra;
-            }
-            else {
-                this.selectedExtras.splice(existingExtraIndex, 1);
-            }
-            
+            this.selectedExtras[existingExtraIndex] = newExtra;
         }
-        else if (newExtra.quantity !== "0") {
+        else {
             this.selectedExtras.push(newExtra)
         }
     }
 
-    async queryApi() {
+    async updateExtras() {
         const URL = this.extrasForm.dataset.update_extras_route
-        return await query(URL, this.bookingNo, this.selectedExtras)
+        const response = await query(URL, this.bookingNo, this.selectedExtras)
+        const extras = response.extrasWithPrices
+        return extras
     }
-
-    showSelectedExtrasWithPrices() {
-        console.log(this.selectedExtrasWithPrices)
-    }
-
-
 }
 
 export default Extras

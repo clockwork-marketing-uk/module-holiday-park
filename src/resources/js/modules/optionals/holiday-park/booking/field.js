@@ -1,10 +1,11 @@
 
 class Field {
-    constructor(name, formElement, required, length) {
+    constructor(name, formElement, required, length = null) {
         this.name = name
         this.required = required
         this.length = length
-        this.htmlElement = formElement.querySelector(`input[name="${this.name}"]`)
+        this.formElement = formElement
+        this.htmlElement = this.findHtmlElement()
         this.value = ""
         this.addRequiredAttribute()
         this.addMaxLengthAttribute()
@@ -12,13 +13,13 @@ class Field {
     }
 
     addRequiredAttribute() {
-        if (this.htmlElement) {
+        if (this.htmlElement && this.required) {
             this.htmlElement.setAttribute("required", this.required)
         }
     }
 
     addMaxLengthAttribute() {
-        if (this.htmlElement) { 
+        if (this.htmlElement && this.length) { 
             this.htmlElement.setAttribute("maxlength", this.length)
 
         }
@@ -31,6 +32,18 @@ class Field {
                 console.log(this.value)
             });
         }
+    }
+
+    findHtmlElement() {
+        const select = this.formElement.querySelector(`select[name="${this.name}"]`)
+        const input = this.formElement.querySelector(`input[name="${this.name}"]`)
+        if (select) {
+            return select
+        }
+        else if (input) {
+            return input
+        }
+        return null
     }
 }
 

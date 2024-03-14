@@ -1,6 +1,6 @@
 
 
-<div id="booking-info" class="hidden w-2/3 mx-auto sm:mx-none" data-update_contact_route="{{ route('holiday-park.booking.update-contact') }}">
+<div id="contact-info" class="hidden w-2/3 mx-auto sm:mx-none" data-update_contact_route="{{ route('holiday-park.booking.update-contact') }}" data-update_booking_availability_route="{{ route('holiday-park.booking.update-booking-availability') }}">
     <form>
         <div class="mx-auto space-y-12">
             <div class="pb-6">

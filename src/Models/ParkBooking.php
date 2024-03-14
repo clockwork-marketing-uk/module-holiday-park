@@ -13,6 +13,19 @@ class ParkBooking extends GenericModel
 {
   use HasTimestamps;
   protected $table = "park_bookings";
-  protected $with = [""];
-  protected $fillable = ["park_accommodation_id", "booking_id", "created_at", "updated_at"];
+  protected $with = [];
+  protected $fillable = [
+    "park_accommodation_id",
+    "booking_no",
+    "booking_type",
+    "arrival_date",
+    "no_of_nights",
+    "no_of_adults",
+    "no_of_children",
+    "park_code",
+    "grade_code",
+    "no_of_pets",
+    "created_at",
+    "updated_at",
+  ];
 }

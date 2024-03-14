@@ -4,7 +4,7 @@ import { updateBookingStepper } from './booking-stepper'
 class BookingManager {
     constructor() {
         this.bookingPage = document.querySelector('#holiday-park-booking-page')
-        this.bookingInfo = this.bookingPage.querySelector('#booking-info')
+        this.contactInfo = this.bookingPage.querySelector('#contact-info')
         this.confirmBooking = this.bookingPage.querySelector('#confirm-booking')
         this.extras = this.bookingPage.querySelector('#extras-page')
         this.paymentInfo = this.bookingPage.querySelector('#payment-info')
@@ -14,11 +14,11 @@ class BookingManager {
         this.backButton = this.bookingPage.querySelector('#back-button')
         this.bookingStepper = this.bookingPage.querySelector('#booking-stepper')
         this.loadingSpinner = this.bookingPage.querySelector('#loading-spinner')
-        this.bookingStates = [this.bookingInfo, this.extras,this.confirmBooking, this.paymentInfo]
+        this.bookingStates = [this.contactInfo, this.extras,this.confirmBooking, this.paymentInfo]
         this.bookingStatesSize = this.bookingStates.length - 1
         this.currentState = -1
         this.bookingNo = this.bookingPage.dataset.booking_id
-        this.booking = new Booking(this.bookingInfo, this.extras, this.confirmBooking, this.paymentInfo, this.bookingNo)
+        this.booking = new Booking(this.contactInfo, this.extras, this.confirmBooking, this.paymentInfo, this.bookingNo, this.bookingSummary)
         this.addEventListenersToButtons()
         this.goToNextStage(1)
         console.log(this.currentState)
@@ -56,7 +56,7 @@ class BookingManager {
     }
 
     hideAllPages() {
-        this.hideElement(this.bookingInfo)
+        this.hideElement(this.contactInfo)
         this.hideElement(this.extras)
         this.hideElement(this.confirmBooking)
         this.hideElement(this.paymentInfo)

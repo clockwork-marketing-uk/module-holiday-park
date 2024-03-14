@@ -35,7 +35,9 @@ class Contact {
     update(currentStage) {
         if (currentStage == this.stage) {
             console.log('updating contact info')
-            return this.updateContactInfo()
+            this.updateContactInfo()
+            this.updateBookingAvailability()
+            return true
         }
     }
 
@@ -48,6 +50,11 @@ class Contact {
     async updateContactInfo() {
         const URL = this.contactForm.dataset.update_contact_route
         return await query(URL, this.bookingNo, this.fields)
+    }
+
+    async updateBookingAvailability() {
+        const URL = this.contactForm.dataset.update_booking_availability_route
+        return await query(URL, this.bookingNo)
     }
 
 

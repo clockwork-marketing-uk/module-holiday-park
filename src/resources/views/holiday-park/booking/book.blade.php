@@ -8,13 +8,13 @@
 
 @section('content')
 
-    <div id="holiday-park-booking-page" data-booking_id="{{ $booking }}" class="mt-10">
+    <div id="holiday-park-booking-page" data-booking_id="{{ $booking->booking_no }}" class="mt-10">
         @include('holidaypark::holiday-park.booking.partials.booking-stepper')
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4">
             @include('holidaypark::holiday-park.booking.partials.booking-summary')
             
             @include('holidaypark::holiday-park.booking.partials.loading-spinner')
-            @include('holidaypark::holiday-park.booking.stages.booking-info')
+            @include('holidaypark::holiday-park.booking.stages.contact-info')
             @include('holidaypark::holiday-park.booking.stages.extras')
             @include('holidaypark::holiday-park.booking.stages.confirm-booking')
             @include('holidaypark::holiday-park.booking.stages.payment-info')

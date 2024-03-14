@@ -4,6 +4,7 @@ namespace Clockwork\HolidayPark\Services;
 
 use Clockwork\EliteParks\Models\Property;
 use Clockwork\EliteParks\Facades\EliteParks;
+use Clockwork\HolidayPark\Models\ParkBooking;
 use Clockwork\Accommodation\Models\Accommodation;
 use Clockwork\EliteParks\Models\MasterBookingExtra;
 use Clockwork\HolidayPark\Models\ParkAccommodation;
@@ -58,14 +59,27 @@ class HolidayParkApiService implements HolidayParkApiInterface
   {
     $booking = EliteParks::createBooking();
     if ($booking->getData()?->message == "ok") {
-      return $booking->getData()?->data?->{'@attributes'}?->booking_no ?? null;
+      $bookingNo = $booking->getData()?->data?->{'@attributes'}?->booking_no ?? null;
+      if (!empty($bookingNo)) {
+        $booking = EliteParks::getBooking($bookingNo)->getData();
+        if (!empty($booking)) {
+          return $booking?->data?->{'@attributes'};
+        }
+      }
     }
     return null;
   }
 
   public static function getBooking($booking)
   {
-    return EliteParks::getBooking($booking)->getData()?->data?->{'@attributes'} ?? null;
+    $bookingResponse = EliteParks::getBooking($booking)->getData();
+    if ($bookingResponse?->message == "ok") {
+      $extras = self::getExtrasFromResponse($bookingResponse?->data?->Extra ?? null);
+      return [
+        "booking" => $bookingResponse?->data?->{'@attributes'},
+        "extras" => $extras,
+      ];
+    }
   }
 
   public static function getExtras()
@@ -88,24 +102,64 @@ class HolidayParkApiService implements HolidayParkApiInterface
     return ["oneOffs" => $oneOffs, "perNights" => $perNights];
   }
 
-  public static function updateExtras($booking_no, $extras) {
-    if ( !empty($booking_no) && !empty($extras) ) {
+  private static function getExtrasFromResponse($extras = null): array
+  {
+    if (!empty($extras)) {
+      if (is_array($extras)) {
+        $formattedExtras = [];
+        foreach ($extras as $extra) {
+          if (!empty($extra) && !empty($extra?->{'@attributes'})) {
+            $formattedExtras[] = (array) $extra?->{'@attributes'};
+          }
+        }
+        return $formattedExtras;
+      } else {
+        return [$extras?->{'@attributes'}];
+      }
+    }
+    return [];
+  }
+
+  public static function updateExtras($booking_no, $extras): array | null
+  {
+    if (!empty($booking_no) && !empty($extras)) {
       $response = EliteParks::updateExtras($booking_no, $extras);
-      if (!empty($response)) {
-        return $response;
-      } 
+      $extras = $response?->getData()?->data?->Extra ?? null;
+      return self::getExtrasFromResponse($extras);
     }
     return null;
   }
 
-  public static function updateContact($booking_no, $contactInfo) {
-    if ( !empty($booking_no) && !empty($contactInfo) ) {
+  public static function updateContact($booking_no, $contactInfo)
+  {
+    if (!empty($booking_no) && !empty($contactInfo)) {
       $response = EliteParks::updateContact($booking_no, $contactInfo);
       if (!empty($response)) {
         return $response;
-      } 
+      }
     }
     return null;
   }
-  
+
+  public static function getParkBooking($booking_no)
+  {
+    return ParkBooking::where('booking_no', $booking_no)->first();
+  }
+
+  public static function updateBookingAvailability($parkBooking)
+  {
+    if (!empty($parkBooking)) {
+      $parkBooking = (array) $parkBooking->getAttributes();
+      $response = EliteParks::updateBookingAvailability($parkBooking);
+      if (!empty($response)) {
+        return $response;
+      }
+    }
+    return null;
+  }
+
+  public static function getMasterBookingExtras()
+  {
+    return MasterBookingExtra::all();
+  }
 }

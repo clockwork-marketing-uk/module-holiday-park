@@ -1,4 +1,4 @@
-async function query(url, bookingNumber, data = null) {
+async function query(url, bookingNumber = null, data = null) {
 
     const payload = {
         booking_no: bookingNumber,

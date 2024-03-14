@@ -38,9 +38,12 @@ class BookingController extends CmsController
           //   "accommodation" => $accommodation,
           //   "stay" => $stay
           // ]);
-          $booking = Cache::rememberForever('booking', function () use ($parkAccommodation) {
-            return $this->createBooking($parkAccommodation?->id);
-          });
+          
+          // $booking = Cache::rememberForever('booking', function () use ($stay, $parkAccommodation, $queryParams) {
+          //   return $this->createBooking($stay, $parkAccommodation->id, $queryParams);
+          // });
+
+          $booking = $this->createBooking($stay, $parkAccommodation->id, $queryParams);
 
           $extras = HolidayParkApiService::getExtras();
 
@@ -57,12 +60,24 @@ class BookingController extends CmsController
     abort(404);
   }
 
-  private function createBooking($parkAccommodationId = null) {
-    $bookingId = HolidayParkApiService::createBooking();
-    if ($bookingId) {
-      ParkBooking::create(["park_accommodation_id" => $parkAccommodationId, "booking_id" => $bookingId]);
+  private function createBooking($stay, $parkAccommodationId, $queryParams) {
+    $booking = HolidayParkApiService::createBooking();
+    if ($booking) {
+      $stay = (array) $stay;
+      $standardAttributes = ["park_accommodation_id" => $parkAccommodationId, 'booking_no' => $booking->booking_no];
+      $bookingAttributes = array_merge($standardAttributes, $stay, $queryParams);
+      
+      ParkBooking::create($bookingAttributes);
     }
-    return $bookingId;
+
+    $parkBooking = HolidayParkApiService::getParkBooking($booking->booking_no);
+
+    $response = null;
+    if (!empty($parkBooking)) {
+      $response = HolidayParkApiService::updateBookingAvailability($parkBooking);
+    }
+
+    return $booking;
   }
 
   public function validateBooking($queryParams)

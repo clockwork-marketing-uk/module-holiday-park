@@ -5,7 +5,9 @@ namespace Clockwork\HolidayPark\Controllers\Api;
 use Illuminate\Http\Request;
 use Clockwork\Core\Abstracts\CmsController;
 use Clockwork\EliteParks\Facades\EliteParks;
+use Clockwork\HolidayPark\Models\ParkBooking;
 use Clockwork\Accommodation\Models\Accommodation;
+use Clockwork\HolidayPark\Models\ParkAccommodation;
 use Clockwork\HolidayPark\Services\HolidayParkApiService;
 use Clockwork\HolidayPark\Repositories\ParkAccommodationRepository;
 
@@ -26,7 +28,6 @@ class ApiBookingController extends CmsController
   public function updateExtras(Request $request) {
     $booking_no = $request?->booking_no;
     $extras = $request?->data;
-
     $extrasWithPrices = null;
     if (!empty($booking_no) && !empty($extras)) {
       $extrasWithPrices = HolidayParkApiService::updateExtras($booking_no, $extras);
@@ -40,7 +41,6 @@ class ApiBookingController extends CmsController
 
   public function getBooking(Request $request) {
     $booking_no = $request?->booking_no;
-
     $booking = null;
     if (!empty($booking_no)) {
       $booking = HolidayParkApiService::getBooking($booking_no);
@@ -65,5 +65,25 @@ class ApiBookingController extends CmsController
       "response" => $response,
       "csrf_token" => csrf_token(),
     ]);
+  }
+
+  public function updateBookingAvailability(Request $request) {
+    $booking_no = $request?->booking_no;
+
+    $parkBooking = HolidayParkApiService::getParkBooking($booking_no);
+
+    $response = null;
+    if (!empty($booking_no) && !empty($parkBooking)) {
+      $response = HolidayParkApiService::updateBookingAvailability($parkBooking);
+    }
+    
+    return response()->json([
+      "response" => $response,
+      "csrf_token" => csrf_token(),
+    ]);
+  }
+
+  public function getMasterBookingExtras(Request $request) {
+    return HolidayParkApiService::getMasterBookingExtras();
   }
 }

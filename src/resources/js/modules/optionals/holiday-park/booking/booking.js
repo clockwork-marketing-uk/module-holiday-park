@@ -7,9 +7,9 @@ import PromotionalCode from './booking-components/promotional-code'
 import { validate } from './validator'
 
 class Booking {
-    constructor(bookingInfoForm, extrasForm, confirmBooking, paymentForm, bookingNo) {
+    constructor(bookingInfoForm, extrasForm, confirmBooking, paymentForm, bookingNo, bookingSummary) {
         this.contact = new Contact(bookingInfoForm, bookingNo)
-        this.extras = new Extras(extrasForm, bookingNo)
+        this.extras = new Extras(extrasForm, bookingNo, bookingSummary)
         this.notes = new Notes(bookingInfoForm)
         this.payment = new Payment(paymentForm)
         this.confirmBooking = new ConfirmBooking(confirmBooking, bookingNo)
