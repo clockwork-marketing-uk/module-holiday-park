@@ -17,6 +17,8 @@ class CardTransaction
   private $merchantSessionKey;
   private $customerDetails;
   private $cardIdentifier;
+  private $valid = false;
+  private $errors;
 
 
   public function __construct(MerchantSessionKey $merchantSessionKey, CardIdentifier $cardIdentifier, CustomerDetails $customerDetails)
@@ -24,21 +26,33 @@ class CardTransaction
     $this->merchantSessionKey = $merchantSessionKey;
     $this->cardIdentifier = $cardIdentifier;
     $this->customerDetails = $customerDetails;
-
     $this->sagePayApi = new SagePayApi();
     $this->createCardTransaction();
   }
 
   private function createCardTransaction() {
-    $cardTransaction = $this->sagePayApi->createCardTransaction($this->merchantSessionKey, $this->cardIdentifier, $this->customerDetails);
-    dd($cardTransaction);
-    if (!empty($cardTransaction) && !empty($cardTransaction['transactionId'] && !empty($cardTransaction['status']))) {
-       if($cardTransaction['status'] == "Ok") {
-        $this->transactionId = $cardTransaction['transactionId'];
-       }
+    $paymentGatewayResponse = $this->sagePayApi->createCardTransaction($this->merchantSessionKey, $this->cardIdentifier, $this->customerDetails);
+    if ($paymentGatewayResponse->valid) {
+      $cardTransactionData = $paymentGatewayResponse->getData();
+      if (!empty($cardTransactionData) && !empty($cardTransactionData['transactionId'] && !empty($cardTransactionData['status']))) {
+        if($cardTransactionData['status'] == "Ok") {
+          $this->transactionId = $cardTransactionData['transactionId'];
+          $this->valid = true;
+         }
+      }
+    }
+    else {
+      $this->errors = $paymentGatewayResponse->errors;
     }
   }
 
+  public function isValid() : bool {
+    return $this->valid && !empty($this->transactionId);
+  }
 
+  public function getErrors()
+  {
+    return $this->errors;
+  }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Clockwork\HolidayPark\SagePay;
 
+use Clockwork\HolidayPark\Responses\PaymentResponse;
 use Clockwork\HolidayPark\SagePay\Customer\CardDetails;
 use Clockwork\HolidayPark\SagePay\Customer\CustomerDetails;
 use Clockwork\HolidayPark\Interfaces\PaymentGatewayInterface;
@@ -17,38 +18,45 @@ class SagePay implements PaymentGatewayInterface
 
   public function __construct()
   {
-
   }
 
-  public function payment(CardDetails $cardDetails, CustomerDetails $customerDetails) {
+  public function payment(CardDetails $cardDetails, CustomerDetails $customerDetails): PaymentResponse
+  {
     $this->createMerchantSessionKey();
 
-    if (!empty($this->merchantSessionKey)) {
+    if ($this->merchantSessionKey->isValid()) {
       $this->createCardIdentifier($cardDetails);
-      if (!empty($this->cardIdentifier)) {
+
+      if ($this->cardIdentifier->isValid()) {
         $this->createCardTransaction($customerDetails);
+
+        if ($this->cardTransaction->isValid()) {
+          return new PaymentResponse(true, "Success", $this->cardTransaction->transactionId);
+        }
+        return new PaymentResponse(false, "Couldn't create transaction", null, $this->cardTransaction->getErrors());
       }
+      return new PaymentResponse(false, "Couldn't create card identifier", null, $this->cardIdentifier->getErrors());
     }
-    else {
-
-    }
-    
+    return new PaymentResponse(
+      false,
+      "Couldn't create merchant session key",
+      null,
+      $this->merchantSessionKey->getErrors()
+    );
   }
 
-  private function sanitizeCardDetails($cardDetails) {
-    
-  }
-
-  private function createMerchantSessionKey() {
+  private function createMerchantSessionKey()
+  {
     $this->merchantSessionKey = new MerchantSessionKey();
   }
 
-  private function createCardIdentifier(CardDetails $cardDetails)  {
+  private function createCardIdentifier(CardDetails $cardDetails)
+  {
     $this->cardIdentifier = new CardIdentifier($cardDetails, $this->merchantSessionKey);
   }
 
-  private function createCardTransaction(CustomerDetails $customerDetails) {
+  private function createCardTransaction(CustomerDetails $customerDetails)
+  {
     $this->cardTransaction = new CardTransaction($this->merchantSessionKey, $this->cardIdentifier, $customerDetails);
   }
-
 }
