@@ -104,6 +104,7 @@ class HolidayParkApiService implements HolidayParkApiInterface
 
   private static function getExtrasFromResponse($extras = null): array
   {
+
     if (!empty($extras)) {
       if (is_array($extras)) {
         $formattedExtras = [];

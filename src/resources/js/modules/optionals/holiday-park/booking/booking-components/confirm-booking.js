@@ -1,4 +1,5 @@
 import { query } from '../api/query'
+import { getBooking } from '../api/getBooking'
 
 class ConfirmBooking {
     stage = 3
@@ -15,24 +16,13 @@ class ConfirmBooking {
 
     async onLoad(currentStage) {
         if (this.isCurrentStage(currentStage)) {
-            console.log('loading confirm booking page')
-            this.bookingInfo = await this.queryApi()
-            let i = 0
-            while (i < this.bookingInfo.length) {
-                
-            }
-
+            this.bookingInfo = await getBooking(this.bookingNo)
             this.showBookingInfo()
         }
     }
 
-    async queryApi() {
-        const URL = this.confirmBooking.dataset.get_booking_route
-        return await query(URL, this.bookingNo)
-    }
-
     showBookingInfo() {
-        this.confirmBooking.innerHTML = this.bookingInfo.booking.booking_no
+        this.confirmBooking.innerHTML = this.bookingInfo.booking.booking.booking_no
     }
 
     isCurrentStage(currentStage) {

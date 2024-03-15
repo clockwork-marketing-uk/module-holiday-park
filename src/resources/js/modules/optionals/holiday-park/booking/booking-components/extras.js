@@ -4,11 +4,11 @@ import { getBooking } from '../api/getBooking'
 import { getMasterBookingExtras } from '../api/getMasterBookingExtras'
 import { formatMoney } from '../helpers/formatMoney'
 import { updateBookingSummary } from '../helpers/updateBookingSummary'
+import { showLoadingSpinner, hideLoadingSpinner } from '../helpers/loadingSpinner'
 
 class Extras {
     fields = []
     stage = 2
-    selectedExtras = []
 
     constructor(form, bookingNo, bookingSummary) {
         this.extrasForm = form
@@ -23,6 +23,7 @@ class Extras {
 
         this.addEventListenersToInputs()
         this.createFields()
+        updateBookingSummary(this.bookingNo)
     }
 
 
@@ -40,7 +41,7 @@ class Extras {
         if (currentStage == this.stage) {
             this.booking = await getBooking(this.bookingNo)
             if (this.booking.booking.extras) {
-                this.availabileExtras = this.booking.booking.extras
+                this.extras = this.booking.booking.extras
                 this.hideUnusedExtras()
             }
             else {
@@ -61,8 +62,10 @@ class Extras {
     }
 
     hideUnusedExtras() {
+        console.log(this.extras)
+        console.log(this.fields)
         this.fields.forEach(field => {
-            const extra = this.availabileExtras.find(extra => field.name === extra.code);
+            const extra = this.extras.find(extra => field.name === extra.code);
             if (!extra) {
                 field.htmlElement.parentElement.parentElement.remove()
             }
@@ -71,6 +74,16 @@ class Extras {
                 if (priceField) {
                     priceField.textContent = formatMoney(extra.unit_price)
                 }
+
+                if (field.htmlElement.tagName == "INPUT") {
+                    extra.quantity > 0 ? field.htmlElement.checked = true : false
+                }
+                else if (field.htmlElement.tagName == "SELECT") {
+                    field.htmlElement.value = extra.quantity
+                }
+
+                // field.htmlElement.value = extra.quantity
+                // extra.quantity > 0 ? field.htmlElement.checked = true : false
             }
         });
     }
@@ -80,7 +93,7 @@ class Extras {
             input.addEventListener("change", async (event) => {
                 this.updateSelectedExtras(event.target.dataset.code, event.target.value)
                 await this.updateExtras()
-                updateBookingSummary(this.bookingNo)
+                await updateBookingSummary(this.bookingNo)
             });
         });
 
@@ -89,7 +102,7 @@ class Extras {
                 const value = event.target.checked ? "1" : "0"
                 this.updateSelectedExtras(event.target.dataset.code, value)
                 await this.updateExtras()
-                updateBookingSummary(this.bookingNo)
+                await updateBookingSummary(this.bookingNo)
             });
         });
     }
@@ -100,18 +113,16 @@ class Extras {
             quantity: quantity
         }
 
-        const existingExtraIndex = this.selectedExtras.findIndex(extra => extra.code == newExtra.code);
+        const existingExtraIndex = this.extras.findIndex(extra => extra.code == newExtra.code);
         if (existingExtraIndex !== -1) {
-            this.selectedExtras[existingExtraIndex] = newExtra;
+            this.extras[existingExtraIndex].quantity = newExtra.quantity;
         }
-        else {
-            this.selectedExtras.push(newExtra)
-        }
+
     }
 
     async updateExtras() {
         const URL = this.extrasForm.dataset.update_extras_route
-        const response = await query(URL, this.bookingNo, this.selectedExtras)
+        const response = await query(URL, this.bookingNo, this.extras)
         const extras = response.extrasWithPrices
         return extras
     }

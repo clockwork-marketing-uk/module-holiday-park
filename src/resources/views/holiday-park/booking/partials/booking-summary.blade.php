@@ -13,13 +13,14 @@
     </div>
 
     <div class="flex flex-row extras-summary-template gap-x-4">
+        <div class="quantity">
+        </div>
         <div class="description">
         </div>
         <div class="price">
         </div>
         <div class="pricing-type">
         </div>
-        <div class="quantity">
-        </div>
+        
     </div>
 </div>
