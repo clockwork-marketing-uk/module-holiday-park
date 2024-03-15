@@ -2,11 +2,12 @@
 
 namespace Clockwork\HolidayPark\SagePay\Transaction;
 
+use Clockwork\HolidayPark\Interfaces\PaymentGatewayValidationInterface;
 use Clockwork\HolidayPark\SagePay\Api\SagePayApi;
 use Clockwork\HolidayPark\SagePay\Customer\CardDetails;
 use Clockwork\HolidayPark\SagePay\Transaction\MerchantSessionKey;
 
-class CardIdentifier
+class CardIdentifier implements PaymentGatewayValidationInterface
 {
     public $cardIdentifier;
     public $expiry;
@@ -49,7 +50,7 @@ class CardIdentifier
     return $this->valid && !empty($this->cardIdentifier);
   }
 
-  public function getErrors()
+  public function getErrors() : array
   {
     return $this->errors;
   }

@@ -6,11 +6,12 @@ use Clockwork\HolidayPark\SagePay\Api\SagePayApi;
 use Clockwork\HolidayPark\SagePay\Customer\CustomerDetails;
 use Clockwork\HolidayPark\SagePay\Transaction\CardIdentifier;
 use Clockwork\HolidayPark\SagePay\Transaction\MerchantSessionKey;
+use Clockwork\HolidayPark\Interfaces\PaymentGatewayValidationInterface;
 
 
 
 
-class CardTransaction
+class CardTransaction implements PaymentGatewayValidationInterface
 {
   public $transactionId;
   private $sagePayApi;
@@ -50,7 +51,7 @@ class CardTransaction
     return $this->valid && !empty($this->transactionId);
   }
 
-  public function getErrors()
+  public function getErrors() : array
   {
     return $this->errors;
   }

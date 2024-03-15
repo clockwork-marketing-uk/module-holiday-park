@@ -3,8 +3,9 @@
 namespace Clockwork\HolidayPark\SagePay\Transaction;
 
 use Clockwork\HolidayPark\SagePay\Api\SagePayApi;
+use Clockwork\HolidayPark\Interfaces\PaymentGatewayValidationInterface;
 
-class MerchantSessionKey
+class MerchantSessionKey implements PaymentGatewayValidationInterface
 {
   public $merchantSessionKey;
   public $expiry;
@@ -39,7 +40,7 @@ class MerchantSessionKey
     return $this->merchantSessionKey;
   }
 
-  public function getErrors()
+  public function getErrors() : array
   {
     return $this->errors;
   }
