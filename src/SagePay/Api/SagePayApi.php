@@ -2,13 +2,15 @@
 
 namespace Clockwork\HolidayPark\SagePay\Api;
 
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Clockwork\HolidayPark\Responses\ApiResponse;
 use Clockwork\HolidayPark\SagePay\Customer\CardDetails;
-use Clockwork\HolidayPark\Responses\PaymentGatewayApiResponse;
+use Clockwork\HolidayPark\SagePay\Purchase\PurchaseInfo;
 use Clockwork\HolidayPark\SagePay\Customer\CustomerDetails;
 use Clockwork\HolidayPark\SagePay\Transaction\CardIdentifier;
+use Clockwork\HolidayPark\Responses\PaymentGatewayApiResponse;
 use Clockwork\HolidayPark\SagePay\Transaction\MerchantSessionKey;
 
 class SagePayApi
@@ -19,10 +21,10 @@ class SagePayApi
   private $integrationPassword;
   public function __construct()
   {
-    $this->endpoint = env('SAGE_PAY_BASE_URL');
-    $this->vendorName = env('SAGE_PAY_VENDOR_NAME');
-    $this->integrationKey = env('SAGE_PAY_INTEGRATION_KEY');
-    $this->integrationPassword = env('SAGE_PAY_INTEGRATION_PASSWORD');
+    $this->endpoint = env('SAGE_PAY_BASE_URL') ?? "";
+    $this->vendorName = env('SAGE_PAY_VENDOR_NAME') ?? "";
+    $this->integrationKey = env('SAGE_PAY_INTEGRATION_KEY') ?? "";
+    $this->integrationPassword = env('SAGE_PAY_INTEGRATION_PASSWORD') ?? "";
   }
 
   public function createMerchantSessionKey(): PaymentGatewayApiResponse
@@ -61,9 +63,20 @@ class SagePayApi
     return new PaymentGatewayApiResponse(false, null, 'Missing card identifier!', $response->json());
   }
 
-  public function createCardTransaction(MerchantSessionKey $merchantSessionKey, CardIdentifier $cardIdentifier, CustomerDetails $customerDetails): PaymentGatewayApiResponse
+  public function createCardTransaction(MerchantSessionKey $merchantSessionKey, CardIdentifier $cardIdentifier, CustomerDetails $customerDetails, PurchaseInfo $purchaseInfo): PaymentGatewayApiResponse
   {
     $queryUrl = 'transactions';
+    try {
+      $totalPrice = (float) $purchaseInfo->total_price;
+    }
+    catch (Exception $e) {
+      $totalPrice = null;
+    }
+
+    if (empty($totalPrice)) {
+      return new PaymentGatewayApiResponse(false, null, 'Price not included in transaction', []);
+    }
+    
     $data = [
       'transactionType' => 'Payment',
       'vendorName' => $this->vendorName,
@@ -76,7 +89,7 @@ class SagePayApi
         ],
       ],
       'vendorTxCode' => uniqid(),
-      'amount' => 1,
+      'amount' => $totalPrice,
       'currency' => 'GBP',
       'description' => 'Transaction Description',
       '3DSecure' => [

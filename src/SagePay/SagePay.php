@@ -6,6 +6,7 @@ use Clockwork\HolidayPark\Responses\PaymentResponse;
 use Clockwork\HolidayPark\SagePay\Customer\CardDetails;
 use Clockwork\HolidayPark\SagePay\Customer\CustomerDetails;
 use Clockwork\HolidayPark\Interfaces\PaymentGatewayInterface;
+use Clockwork\HolidayPark\SagePay\Purchase\PurchaseInfo;
 use Clockwork\HolidayPark\SagePay\Transaction\CardIdentifier;
 use Clockwork\HolidayPark\SagePay\Transaction\CardTransaction;
 use Clockwork\HolidayPark\SagePay\Transaction\MerchantSessionKey;
@@ -20,7 +21,7 @@ class SagePay implements PaymentGatewayInterface
   {
   }
 
-  public function payment(CardDetails $cardDetails, CustomerDetails $customerDetails): PaymentResponse
+  public function payment(CardDetails $cardDetails, CustomerDetails $customerDetails, PurchaseInfo $purchaseInfo): PaymentResponse
   {
     $this->createMerchantSessionKey();
 
@@ -28,7 +29,7 @@ class SagePay implements PaymentGatewayInterface
       $this->createCardIdentifier($cardDetails);
 
       if ($this->cardIdentifier->isValid()) {
-        $this->createCardTransaction($customerDetails);
+        $this->createCardTransaction($customerDetails, $purchaseInfo);
 
         if ($this->cardTransaction->isValid()) {
           return new PaymentResponse(true, "Success", $this->cardTransaction->transactionId);
@@ -55,8 +56,8 @@ class SagePay implements PaymentGatewayInterface
     $this->cardIdentifier = new CardIdentifier($cardDetails, $this->merchantSessionKey);
   }
 
-  private function createCardTransaction(CustomerDetails $customerDetails)
+  private function createCardTransaction(CustomerDetails $customerDetails, PurchaseInfo $purchaseInfo)
   {
-    $this->cardTransaction = new CardTransaction($this->merchantSessionKey, $this->cardIdentifier, $customerDetails);
+    $this->cardTransaction = new CardTransaction($this->merchantSessionKey, $this->cardIdentifier, $customerDetails, $purchaseInfo);
   }
 }

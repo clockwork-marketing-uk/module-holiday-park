@@ -16,7 +16,7 @@ class CardIdentifier implements PaymentGatewayValidationInterface
     private $sagePayApi;
     private $cardDetails;
     private $merchantSessionKey;
-    private $errors;
+    private $errors = [];
 
   public function __construct(CardDetails $cardDetails, MerchantSessionKey $merchantSessionKey)
   {

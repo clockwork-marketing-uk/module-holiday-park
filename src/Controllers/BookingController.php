@@ -3,12 +3,14 @@
 namespace Clockwork\HolidayPark\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+use Clockwork\Core\Helpers\TagParser;
+use Clockwork\Settings\Helpers\Setting;
 use Clockwork\Core\Abstracts\CmsController;
 use Clockwork\EliteParks\Facades\EliteParks;
 use Clockwork\HolidayPark\Models\ParkBooking;
 use Clockwork\Accommodation\Models\Accommodation;
 use Clockwork\HolidayPark\Services\HolidayParkApiService;
+use Clockwork\HolidayPark\Services\PaymentGatewayService;
 use Clockwork\HolidayPark\Repositories\ParkAccommodationRepository;
 
 class BookingController extends CmsController
@@ -24,7 +26,7 @@ class BookingController extends CmsController
   public function book(Request $request)
   {
     $queryParams = $request->all();
-    $accommodationId = $queryParams['id'] ?? null;
+    $accommodationId = $queryParams["id"] ?? null;
     if (!empty($accommodationId)) {
       $parkAccommodation = HolidayParkApiService::getParkAccommodationByAccommodationId($accommodationId);
       $accommodation = Accommodation::find($accommodationId);
@@ -38,10 +40,6 @@ class BookingController extends CmsController
           //   "accommodation" => $accommodation,
           //   "stay" => $stay
           // ]);
-          
-          // $booking = Cache::rememberForever('booking', function () use ($stay, $parkAccommodation, $queryParams) {
-          //   return $this->createBooking($stay, $parkAccommodation->id, $queryParams);
-          // });
 
           $booking = $this->createBooking($stay, $parkAccommodation->id, $queryParams);
 
@@ -52,7 +50,7 @@ class BookingController extends CmsController
             "accommodation" => $accommodation,
             "stay" => $stay,
             "booking" => $booking,
-            "extras" => $extras
+            "extras" => $extras,
           ]);
         }
       }
@@ -60,13 +58,14 @@ class BookingController extends CmsController
     abort(404);
   }
 
-  private function createBooking($stay, $parkAccommodationId, $queryParams) {
+  private function createBooking($stay, $parkAccommodationId, $queryParams)
+  {
     $booking = HolidayParkApiService::createBooking();
     if ($booking) {
       $stay = (array) $stay;
-      $standardAttributes = ["park_accommodation_id" => $parkAccommodationId, 'booking_no' => $booking->booking_no];
+      $standardAttributes = ["park_accommodation_id" => $parkAccommodationId, "booking_no" => $booking->booking_no];
       $bookingAttributes = array_merge($standardAttributes, $stay, $queryParams);
-      
+
       ParkBooking::create($bookingAttributes);
     }
 
@@ -76,14 +75,13 @@ class BookingController extends CmsController
     if (!empty($parkBooking)) {
       $response = HolidayParkApiService::updateBookingAvailability($parkBooking);
     }
-
-    return $booking;
+    return $parkBooking;
   }
 
   public function validateBooking($queryParams)
   {
-    if (!empty($queryParams['id'])) {
-      unset($queryParams['id']);
+    if (!empty($queryParams["id"])) {
+      unset($queryParams["id"]);
     }
 
     $availability = EliteParks::findAvailability($queryParams)->getData();
@@ -105,7 +103,7 @@ class BookingController extends CmsController
   {
     foreach ($queryParams as $paramName => $paramValue) {
       if (property_exists($stay, $paramName)) {
-        if (str_contains($paramName, 'date')) {
+        if (str_contains($paramName, "date")) {
           $paramValue = EliteParks::formatSingleDate($paramValue);
         }
         if ($stay->{$paramName} !== $paramValue) {
@@ -114,5 +112,51 @@ class BookingController extends CmsController
       }
     }
     return true;
+  }
+
+  public function beginPayment(Request $request)
+  {
+
+    $bookingNo = $request->booking_no;
+    $booking = HolidayParkApiService::getBooking($bookingNo);
+    $booking = $booking['booking'];
+    $totalPrice = $booking->total_price;
+    $booking->reference = $booking->booking_no;
+    $booking = (array) $booking;
+
+    $payment = PaymentGatewayService::makePayment($request->all(), $booking);
+
+    if ($payment->valid) {
+      HolidayParkApiService::bookingSuccess($bookingNo, $totalPrice);
+      $this->redirectToSuccessPage();
+    }
+
+    if (!$payment->valid) {
+      HolidayParkApiService::bookingFailed($bookingNo);
+      $this->redirectToFailedPage();
+    }
+
+    HolidayParkApiService::bookingFailed($bookingNo);
+    return redirect('/contact');
+  }
+
+  private function redirectToSuccessPage() {
+    $bookingSuccessPageDynamicLink = app(Setting::class)->get("park_booking_success");
+    if (!empty($bookingSuccessPageDynamicLink)) {
+      $bookingSuccessPageUrl = TagParser::parse($bookingSuccessPageDynamicLink);
+      if (!empty($bookingSuccessPageUrl)) {
+        return redirect($bookingSuccessPageUrl);
+      }
+    }
+  }
+
+  private function redirectToFailedPage() {
+    $bookingFailedPageDynamicLink = app(Setting::class)->get("park_booking_failed");
+    if (!empty($bookingFailedPageDynamicLink)) {
+      $bookingFailedPageUrl = TagParser::parse($bookingFailedPageDynamicLink);
+      if (!empty($bookingFailedPageUrl)) {
+        return redirect($bookingFailedPageUrl);
+      }
+    }
   }
 }

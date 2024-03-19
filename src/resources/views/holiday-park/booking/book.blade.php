@@ -8,34 +8,32 @@
 
 @section('content')
 
-    <div id="holiday-park-booking-page" data-booking_id="{{ $booking->booking_no }}" class="mt-10">
+    <div id="holiday-park-booking-page" data-booking_id="{{ $booking->booking_no }}">
         @include('holidaypark::holiday-park.booking.partials.booking-stepper')
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4">
-            @include('holidaypark::holiday-park.booking.partials.booking-summary')
-            
+        <div class="stages-wrapper">
             @include('holidaypark::holiday-park.booking.partials.loading-spinner')
-            @include('holidaypark::holiday-park.booking.stages.contact-info')
+            @include('holidaypark::holiday-park.booking.stages.booking-info')
             @include('holidaypark::holiday-park.booking.stages.extras')
             @include('holidaypark::holiday-park.booking.stages.confirm-booking')
             @include('holidaypark::holiday-park.booking.stages.payment-info')
+
+            @include('holidaypark::holiday-park.booking.partials.booking-summary')
         </div>
 
         <div class="flex justify-center" id="form-feedback">
             
         </div>
 
-        <div class="flex justify-center my-6 gap-x-4">
-            <div class="flex flex-row bg-gray-300 cursor-pointer btn" id="back-button">
-                <i class="my-auto cursor-pointer fal fa-arrow-left-long"></i>
-                <div class="ml-2 button-text">
-                    Back
-                </div>
+        <div class="booking-nav">
+            <div class="cursor-pointer btn secondary-btn" id="back-button">
+                <i class="my-auto cursor-pointer fal fa-angle-left"></i>
+                <span class="button-text">Back</span>
             </div>
-            <div class="flex flex-row cursor-pointer btn secondary-btn" id="next-button">
-                <div class="mr-2 button-text">
-                    Next
-                </div>
-                <i class="my-auto cursor-pointer fal fa-arrow-right-long"></i>
+
+            <div class="cursor-pointer btn secondary-btn" id="next-button">
+                <span class="button-text">Next</span>
+                
+                <i class="my-auto cursor-pointer fal fa-angle-right"></i>
             </div>
         </div>
     </div>

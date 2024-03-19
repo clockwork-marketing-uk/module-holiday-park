@@ -50,9 +50,11 @@ Route::prefix("holiday-park/booking")
     Route::post('/update-contact', [ApiBookingController::class, 'updateContact'])->name('.update-contact');
     Route::post('/update-extras', [ApiBookingController::class, 'updateExtras'])->name('.update-extras');
     Route::post('/get-booking', [ApiBookingController::class, 'getBooking'])->name('.get-booking');
+    Route::post('/tag-booking', [ApiBookingController::class, 'tagBooking'])->name('.tag-booking');
     Route::post('/update-booking-availability', [ApiBookingController::class, 'updateBookingAvailability'])->name('.update-booking-availability');
-
     Route::post('/get-master-booking-extras', [ApiBookingController::class, 'getMasterBookingExtras'])->name('.get-master-booking-extras');
+
+    Route::post('/begin-payment', [BookingController::class, 'beginPayment'])->name('.begin-payment');
 
     
   });

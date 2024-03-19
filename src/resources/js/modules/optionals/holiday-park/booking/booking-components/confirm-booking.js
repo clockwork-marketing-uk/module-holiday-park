@@ -11,13 +11,14 @@ class ConfirmBooking {
     update(currentStage) {
         if (this.isCurrentStage(currentStage)) {
             console.log('updating confirm booking info')
+            this.tagBooking()
+
         }
     }
 
     async onLoad(currentStage) {
         if (this.isCurrentStage(currentStage)) {
             this.bookingInfo = await getBooking(this.bookingNo)
-            this.showBookingInfo()
         }
     }
 
@@ -28,6 +29,12 @@ class ConfirmBooking {
     isCurrentStage(currentStage) {
         return currentStage == this.stage
     }
+
+    async tagBooking() {
+        const URL = this.confirmBooking.dataset.tag_booking_route
+        return await query(URL, this.bookingNo)
+    }
+
 }
 
 export default ConfirmBooking

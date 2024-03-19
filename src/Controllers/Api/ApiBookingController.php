@@ -86,4 +86,17 @@ class ApiBookingController extends CmsController
   public function getMasterBookingExtras(Request $request) {
     return HolidayParkApiService::getMasterBookingExtras();
   }
+
+  public function tagBooking(Request $request) {
+    $booking_no = $request?->booking_no;
+    $booking = null;
+    if (!empty($booking_no)) {
+      $booking = HolidayParkApiService::tagBooking($booking_no);
+    }
+    
+    return response()->json([
+      "booking" => $booking,
+      "csrf_token" => csrf_token(),
+    ]);
+  }
 }

@@ -14,7 +14,7 @@ class Field {
 
     addRequiredAttribute() {
         if (this.htmlElement && this.required) {
-            this.htmlElement.setAttribute("required", this.required)
+            this.htmlElement.setAttribute("required", "")
         }
     }
 

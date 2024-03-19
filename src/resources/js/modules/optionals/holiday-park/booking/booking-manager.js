@@ -4,7 +4,7 @@ import { updateBookingStepper } from './booking-stepper'
 class BookingManager {
     constructor() {
         this.bookingPage = document.querySelector('#holiday-park-booking-page')
-        this.contactInfo = this.bookingPage.querySelector('#contact-info')
+        this.contactInfo = this.bookingPage.querySelector('#booking-info')
         this.confirmBooking = this.bookingPage.querySelector('#confirm-booking')
         this.extras = this.bookingPage.querySelector('#extras-page')
         this.paymentInfo = this.bookingPage.querySelector('#payment-info')

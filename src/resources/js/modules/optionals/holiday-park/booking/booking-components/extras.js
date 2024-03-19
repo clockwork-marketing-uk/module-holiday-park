@@ -33,12 +33,13 @@ class Extras {
 
     async update(currentStage) {
         if (currentStage == this.stage) {
-            console.log('updating extras info')
         }
     }
 
     async onLoad(currentStage) {
         if (currentStage == this.stage) {
+            this.loading()
+
             this.booking = await getBooking(this.bookingNo)
             if (this.booking.booking.extras) {
                 this.extras = this.booking.booking.extras
@@ -47,8 +48,20 @@ class Extras {
             else {
                 this.onLoad(this.currentStage)
             }
-            
+
+            this.stopLoading()
+
         }
+    }
+
+    loading() {
+        showLoadingSpinner()
+        this.extrasForm.classList.add('hidden')
+    }
+
+    stopLoading() {
+        this.extrasForm.classList.remove('hidden')
+        hideLoadingSpinner()
     }
 
     createFields() {
@@ -67,10 +80,10 @@ class Extras {
         this.fields.forEach(field => {
             const extra = this.extras.find(extra => field.name === extra.code);
             if (!extra) {
-                field.htmlElement.parentElement.parentElement.remove()
+                field.htmlElement.parentElement.remove()
             }
             else {
-                const priceField = field.htmlElement.parentElement.parentElement.querySelector('.price')
+                const priceField = field.htmlElement.parentElement.querySelector('.price')
                 if (priceField) {
                     priceField.textContent = formatMoney(extra.unit_price)
                 }

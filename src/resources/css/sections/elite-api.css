@@ -1,0 +1,112 @@
+#holiday-park-booking-page{
+    @apply w-full mx-auto max-w-screen-2xl px-6;
+    #booking-stepper{
+        @apply p-4 mb-6 md:mb-10 bg-green-300;
+        ol.steps{
+            @apply flex items-center w-full text-sm text-center sm:text-base bg-yellow-400;
+            li{
+              @apply flex md:w-full items-center;  
+            }
+        }
+    }
+    .stages-wrapper{
+        @apply grid grid-cols-1 lg:grid-cols-5 gap-x-4 md:gap-x-6 lg:gap-x-10 xl:gap-x-16;
+        #booking-summary{
+            @apply order-1 lg:order-2 lg:col-span-2 mb-6;
+            .inner-wrap{
+                @apply p-6 md:p-10 border border-gray-300 shadow-md rounded-md;
+                .section-heading{
+                    @apply mb-6 md:mb-10;
+                   .title{
+                        @apply block font-heading text-xl sm:text-2xl mb-2;
+                    }
+                    .text{
+                        @apply text-xs;
+                    } 
+                }
+                .accommodation-type{
+                    @apply grid grid-cols-5 gap-6 border-b border-gray-300 pb-6 mb-2;
+                    img{
+                        @apply col-span-2;
+                    }
+                    .selected-accommodation{
+                        @apply col-span-3 flex flex-col justify-center items-start;
+                        h4.title{
+                            @apply block font-heading text-lg mb-1;
+                        }
+                        .category{
+                            @apply text-sm opacity-50;
+                        }
+                    }
+                }
+                .reservation-option{
+                    @apply p-2 mb-2 border-b border-gray-200 text-left text-sm flex flex-row justify-between gap-4;
+                    strong{
+                        @apply block mb-2;
+                    }
+                }
+                .price{
+                    @apply font-normal font-heading text-xl sm:text-2xl;
+                    strong{
+                        @apply font-normal;
+                    }
+                }
+            }
+        }
+    
+        #booking-info, #payment-info{
+            @apply order-2 lg:order-1 lg:col-span-3;
+    
+            .form-content{
+                @apply mb-6 md:mb-10 text-white bg-primary rounded-md py-3 px-6 text-xs;
+               .form-heading{
+                    @apply block font-heading text-xl sm:text-2xl mb-1;
+                } 
+            }
+    
+            .form-fields{
+                @apply grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6 px-6;
+                .label{
+                    @apply block text-sm mb-2;
+                }
+                input[type=text], input[type=email], input[type=tel]{
+                    @apply block p-4 w-full bg-gray-100 rounded-md border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary text-sm;
+                }
+                textarea{
+                    @apply block p-4 w-full min-h-[7rem] rounded-lg bg-gray-100 border border-gray-300 text-sm;
+                }
+            }
+        }
+        #extras-page{
+            @apply order-2 lg:order-1 lg:col-span-3;
+            .section-title{
+                @apply block mb-6 md:mb-10 text-white bg-primary rounded-md py-3 px-6 text-xs;
+               .title{
+                    @apply block font-heading text-xl sm:text-2xl mb-1;
+                } 
+            }
+            .extras-wrap{
+                @apply px-6;
+                .extra-option{
+                    @apply p-2 mb-2;
+                    .title{
+                        @apply font-normal font-heading text-xl mb-4;
+                    }
+                    .option{
+                        @apply py-3 mb-2 border-b border-gray-200 text-left text-sm flex flex-row justify-between gap-4;
+                        strong{
+                            @apply block mb-2 my-auto;
+                        }
+                        input[type=checkbox], select{
+                            @apply block p-4 bg-gray-100 rounded-md border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary text-sm;
+                        }
+                    }
+                }
+                
+            }
+        }
+    }
+    .booking-nav{
+        @apply flex justify-center gap-x-4 py-6 lg:py-10;
+    }
+}

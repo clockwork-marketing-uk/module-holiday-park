@@ -4,6 +4,7 @@ namespace Clockwork\HolidayPark\SagePay\Transaction;
 
 use Clockwork\HolidayPark\SagePay\Api\SagePayApi;
 use Clockwork\HolidayPark\SagePay\Customer\CustomerDetails;
+use Clockwork\HolidayPark\SagePay\Purchase\PurchaseInfo;
 use Clockwork\HolidayPark\SagePay\Transaction\CardIdentifier;
 use Clockwork\HolidayPark\SagePay\Transaction\MerchantSessionKey;
 use Clockwork\HolidayPark\Interfaces\PaymentGatewayValidationInterface;
@@ -18,21 +19,23 @@ class CardTransaction implements PaymentGatewayValidationInterface
   private $merchantSessionKey;
   private $customerDetails;
   private $cardIdentifier;
+  private $purchaseInfo;
   private $valid = false;
   private $errors;
 
 
-  public function __construct(MerchantSessionKey $merchantSessionKey, CardIdentifier $cardIdentifier, CustomerDetails $customerDetails)
+  public function __construct(MerchantSessionKey $merchantSessionKey, CardIdentifier $cardIdentifier, CustomerDetails $customerDetails, PurchaseInfo $purchaseInfo)
   {
     $this->merchantSessionKey = $merchantSessionKey;
     $this->cardIdentifier = $cardIdentifier;
     $this->customerDetails = $customerDetails;
     $this->sagePayApi = new SagePayApi();
+    $this->purchaseInfo = $purchaseInfo;
     $this->createCardTransaction();
   }
 
   private function createCardTransaction() {
-    $paymentGatewayResponse = $this->sagePayApi->createCardTransaction($this->merchantSessionKey, $this->cardIdentifier, $this->customerDetails);
+    $paymentGatewayResponse = $this->sagePayApi->createCardTransaction($this->merchantSessionKey, $this->cardIdentifier, $this->customerDetails, $this->purchaseInfo);
     if ($paymentGatewayResponse->valid) {
       $cardTransactionData = $paymentGatewayResponse->getData();
       if (!empty($cardTransactionData) && !empty($cardTransactionData['transactionId'] && !empty($cardTransactionData['status']))) {
