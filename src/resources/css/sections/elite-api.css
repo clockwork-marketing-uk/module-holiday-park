@@ -1,11 +1,17 @@
 #holiday-park-booking-page{
     @apply w-full mx-auto max-w-screen-2xl px-6;
     #booking-stepper{
-        @apply p-4 mb-6 md:mb-10 bg-green-300;
+        @apply p-4 my-6 md:my-10;
         ol.steps{
-            @apply flex items-center w-full text-sm text-center sm:text-base bg-yellow-400;
+            @apply flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base;
             li{
-              @apply flex md:w-full items-center;  
+                @apply flex md:w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700;
+                span{
+                    @apply flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500;
+                    .progress-number{
+                        @apply me-2;
+                    }
+                }
             }
         }
     }
@@ -39,22 +45,48 @@
                         }
                     }
                 }
-                .reservation-option{
-                    @apply p-2 mb-2 border-b border-gray-200 text-left text-sm flex flex-row justify-between gap-4;
-                    strong{
-                        @apply block mb-2;
+                .options-list{
+                    .reservation-option{
+                        @apply p-2 mb-2 border-b border-gray-200 text-left text-sm flex flex-row justify-between gap-4;
+                        strong{
+                            @apply block mb-2;
+                        }
+                        &:last-of-type{
+                            @apply border-b-0;
+                        }
                     }
                 }
-                .price{
+                
+                .stay-price{
                     @apply font-normal font-heading text-xl sm:text-2xl;
                     strong{
                         @apply font-normal;
                     }
                 }
+                .reserved-extras{
+                    @apply rounded-md border border-gray-300 bg-gray-100 p-6;
+                    .title{
+                        @apply font-heading text-lg block mb-4 border-b border-gray-300;
+                    }
+          
+                    .extras-summary-list{
+                        @apply text-sm;
+                        .selected-extra{
+                            @apply flex flex-row justify-between items-center gap-4 mb-1 pb-1 border-b border-gray-300;
+                            &:last-of-type{
+                                @apply border-b-0;
+                            } 
+                            div{
+                                @apply basis-0 grow;
+                            }
+                        }
+                    }
+
+                }
             }
         }
     
-        #booking-info, #payment-info{
+        #booking-info, #payment-info, #confirmation-content{
             @apply order-2 lg:order-1 lg:col-span-3;
     
             .form-content{
@@ -63,7 +95,12 @@
                     @apply block font-heading text-xl sm:text-2xl mb-1;
                 } 
             }
-    
+            .section-heading{
+                @apply p-4 bg-tertiary text-white rounded-md mb-4 lg:mb-6;
+                h4{
+                    @apply mb-0 text-base;
+                }
+            }
             .form-fields{
                 @apply grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6 px-6;
                 .label{
@@ -76,7 +113,17 @@
                     @apply block p-4 w-full min-h-[7rem] rounded-lg bg-gray-100 border border-gray-300 text-sm;
                 }
             }
+            .form-section{
+                @apply mb-6 lg:mb-10;
+            }
+            .pay-now{
+                @apply flex flex-row items-center justify-center lg:block;
+                .pay-btn{
+                    @apply w-full md:w-64 mx-auto;
+                }
+            }
         }
+
         #extras-page{
             @apply order-2 lg:order-1 lg:col-span-3;
             .section-title{
@@ -84,22 +131,56 @@
                .title{
                     @apply block font-heading text-xl sm:text-2xl mb-1;
                 } 
+                
             }
             .extras-wrap{
                 @apply px-6;
                 .extra-option{
-                    @apply p-2 mb-2;
+                    @apply mb-2;
                     .title{
-                        @apply font-normal font-heading text-xl mb-4;
+                        @apply p-4 bg-tertiary text-white rounded-md mb-4;
                     }
                     .option{
-                        @apply py-3 mb-2 border-b border-gray-200 text-left text-sm flex flex-row justify-between gap-4;
-                        strong{
-                            @apply block mb-2 my-auto;
+                        @apply py-3 mb-2 border-b border-gray-200 text-left text-sm flex flex-row justify-between items-center gap-4;
+                        &:last-of-type{
+                            @apply border-b-0;
                         }
-                        input[type=checkbox], select{
+                        div{
+                            @apply py-2 text-right;
+                        }
+                        .option-name{
+                            @apply text-left;
+                            strong{
+                                @apply block mb-2 my-auto;
+                            }
+                        }
+
+                        .option-selector{
+                            @apply flex flex-row items-center justify-end gap-10 pl-4;
+                        }
+                        
+                        select{
                             @apply block p-4 bg-gray-100 rounded-md border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary text-sm;
                         }
+
+                        input[type="checkbox"] {
+                            appearance: none;
+                            display: grid;
+                            place-content: center;
+                            @apply w-8 h-8 p-0 m-0 rounded-md bg-gray-100 border border-gray-300;
+                        }
+                
+                        input[type="checkbox"]::before {
+                            @apply w-8 h-8 transition-all scale-0;
+                            content: "";
+                        }
+                
+                        input[type="checkbox"]:checked::before {
+                            @apply scale-100 bg-primary rounded-md border-primary;
+                            content: url("/images/check-regular.svg");
+                            padding: 0.45rem;
+                        }
+
                     }
                 }
                 

@@ -3,8 +3,12 @@
 namespace Clockwork\HolidayPark\Controllers;
 
 use Illuminate\Http\Request;
+use Clockwork\Core\Models\Base;
+use Clockwork\Pages\Models\Page;
+use Illuminate\Support\Facades\Log;
 use Clockwork\Core\Helpers\TagParser;
 use Clockwork\Settings\Helpers\Setting;
+use Illuminate\Support\Facades\Validator;
 use Clockwork\Core\Abstracts\CmsController;
 use Clockwork\EliteParks\Facades\EliteParks;
 use Clockwork\HolidayPark\Models\ParkBooking;
@@ -25,6 +29,7 @@ class BookingController extends CmsController
 
   public function book(Request $request)
   {
+    // dd($request);
     $queryParams = $request->all();
     $accommodationId = $queryParams["id"] ?? null;
     if (!empty($accommodationId)) {
@@ -45,17 +50,34 @@ class BookingController extends CmsController
 
           $extras = HolidayParkApiService::getExtras();
 
+          $confirmationPage = $this->findConfirmationPage();
+
+
           return view("holidaypark::holiday-park.booking.book", [
             "parkAccommodation" => $parkAccommodation,
             "accommodation" => $accommodation,
             "stay" => $stay,
             "booking" => $booking,
             "extras" => $extras,
+            "confirmationPage" => $confirmationPage
           ]);
         }
       }
     }
     abort(404);
+  }
+
+  private function findConfirmationPage()
+  {
+    $confirmationPageDynamicLink = app(Setting::class)->get("park_confirmation_page") ?? "";
+    if (!empty($confirmationPageDynamicLink)) {
+      $confirmationPageUrl = TagParser::parse($confirmationPageDynamicLink);
+      if (!empty($confirmationPageUrl)) {
+        $confirmationPageBase = Base::where('url', '=', $confirmationPageUrl)->first() ?? null;
+        return Page::find($confirmationPageBase->baseable_id) ?? null;
+      }
+    }
+    return null;
   }
 
   private function createBooking($stay, $parkAccommodationId, $queryParams)
@@ -116,6 +138,23 @@ class BookingController extends CmsController
 
   public function beginPayment(Request $request)
   {
+    $request->validate([
+      'cardNumber' => 'required|digits_between:15,19',
+      'expiryDate' => 'required',
+      'cardholderName' => 'required',
+      'securityCode' => 'required',
+
+      'customerFirstName' => 'required',
+      'customerLastName' => 'required',
+      'customerEmail' => 'required',
+      'customerPhone' => 'required',
+
+      'city' => 'required',
+      'postalCode' => 'required',
+      'address1' => 'required',
+    ]);
+
+    // dd($validatedData);
 
     $bookingNo = $request->booking_no;
     $booking = HolidayParkApiService::getBooking($bookingNo);
@@ -126,21 +165,49 @@ class BookingController extends CmsController
 
     $payment = PaymentGatewayService::makePayment($request->all(), $booking);
 
+
+    if ($this->needs3dSecureRedirect($payment)) {
+      return $payment->data->redirect3DSecure;
+    }
+
     if ($payment->valid) {
       HolidayParkApiService::bookingSuccess($bookingNo, $totalPrice);
-      $this->redirectToSuccessPage();
+      return $this->redirectToSuccessPage();
     }
 
     if (!$payment->valid) {
       HolidayParkApiService::bookingFailed($bookingNo);
-      $this->redirectToFailedPage();
+      return $this->redirectToFailedPage();
     }
 
-    HolidayParkApiService::bookingFailed($bookingNo);
     return redirect('/contact');
   }
 
-  private function redirectToSuccessPage() {
+  // "_token" => null
+  // "address1" => "Clockwork Marketing"
+  // "address2" => "2"
+  // "address3" => "3"
+  // "city" => "Brixham"
+  // "postalCode" => "tq59wadww"
+  // "country" => "GB"
+  // "state" => null
+  // "booking_no" => "BK0013110"
+  // "cardholderName" => "Squidward Tentacles beans"
+  // "cardNumber" => "4929000000006wasd"
+  // "expiryDate" => "000000wasd"
+  // "securityCode" => "wa123"
+  // "customerFirstName" => "Tom"
+  // "customerLastName" => "Allenbrook"
+  // "customerEmail" => "tom.allenbrook@clock-work.co.uk"
+  // "customerPhone" => "07753991437"
+
+  private function validatePaymentRequest(Request $request)
+  {
+
+  }
+
+  private function redirectToSuccessPage()
+  {
     $bookingSuccessPageDynamicLink = app(Setting::class)->get("park_booking_success");
     if (!empty($bookingSuccessPageDynamicLink)) {
       $bookingSuccessPageUrl = TagParser::parse($bookingSuccessPageDynamicLink);
@@ -150,7 +217,8 @@ class BookingController extends CmsController
     }
   }
 
-  private function redirectToFailedPage() {
+  private function redirectToFailedPage()
+  {
     $bookingFailedPageDynamicLink = app(Setting::class)->get("park_booking_failed");
     if (!empty($bookingFailedPageDynamicLink)) {
       $bookingFailedPageUrl = TagParser::parse($bookingFailedPageDynamicLink);
@@ -158,5 +226,34 @@ class BookingController extends CmsController
         return redirect($bookingFailedPageUrl);
       }
     }
+  }
+
+  public function threeDSecureReceiveResponse(Request $request)
+  {
+    $requestData = $request->all();
+    $decodedSessionData = base64_decode($requestData['threeDSSessionData']);
+    parse_str($decodedSessionData, $sessionData);
+
+    if (!empty($requestData['cres']) && !empty($sessionData['transactionId'] && !empty($sessionData['bookingId']))) {
+      $secure = PaymentGatewayService::confirm3DSecure($sessionData['transactionId'], $requestData['cres']);
+      if ($secure?->valid && !empty($secure?->data['amount']['totalAmount'])) {
+        HolidayParkApiService::bookingSuccess($sessionData['bookingId'], $secure->data['amount']['totalAmount']);
+        return $this->redirectToSuccessPage();
+      } else {
+        HolidayParkApiService::bookingFailed($sessionData['bookingId']);
+        return $this->redirectToFailedPage();
+      }
+    }
+    return redirect('/contact');
+  }
+
+  private function needs3dSecureRedirect($payment)
+  {
+    return !empty($payment->data->redirect3DSecure);
+  }
+
+  public function threeDSecureStart(Request $request)
+  {
+    return view('holidaypark::holiday-park.booking.3d-secure.start', $request->all());
   }
 }

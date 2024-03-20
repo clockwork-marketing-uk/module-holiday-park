@@ -1,4 +1,7 @@
 import Field from "../field"
+import { validate } from '../validator'
+import { showFormFeedback } from '../helpers/showFormFeedback'
+
 
 class Payment {
   stage = 4
@@ -17,26 +20,49 @@ class Payment {
 
   async onLoad(currentStage) {
     if (currentStage == this.stage) {
+      console.log('loading payment page')
       this.updateExistingFields()
+
+      const payNowButton = this.paymentForm.querySelector('#pay-now-button')
+      console.log(payNowButton)
+      console.log(this.paymentForm)
+      if (payNowButton) {
+        payNowButton.addEventListener("click", (event) => {
+          console.log('click')
+          const stages = [
+            {
+              stage: this.stage,
+              fields: this.fields
+            }
+          ]
+          const validation = validate(stages, this.stage)
+          console.log(validation)
+          if (!validation.valid) {
+            event.preventDefault();
+            showFormFeedback(validation)
+          }
+      });
+      }
+
     }
   }
 
   createFields() {
-    this.fields.push(new Field("address1", this.paymentForm, true))
-    this.fields.push(new Field("address2", this.paymentForm, true))
-    this.fields.push(new Field("address3", this.paymentForm, true))
-    this.fields.push(new Field("city", this.paymentForm, true))
-    this.fields.push(new Field("postalCode", this.paymentForm, true))
-    this.fields.push(new Field("country", this.paymentForm, true))
+    this.fields.push(new Field("address1", this.paymentForm, true, 50))
+    this.fields.push(new Field("address2", this.paymentForm, false, 50))
+    this.fields.push(new Field("address3", this.paymentForm, false, 50))
+    this.fields.push(new Field("city", this.paymentForm, true, 40))
+    this.fields.push(new Field("postalCode", this.paymentForm, false, 10))
+    this.fields.push(new Field("country", this.paymentForm, true, 2))
     // this.fields.push(new Field('state',this.paymentForm, false))
-    this.fields.push(new Field("cardholderName", this.paymentForm, true))
-    this.fields.push(new Field("cardNumber", this.paymentForm, true))
-    this.fields.push(new Field("expiryDate", this.paymentForm, true))
-    this.fields.push(new Field("securityCode", this.paymentForm, true))
-    this.fields.push(new Field("customerFirstName", this.paymentForm, true))
-    this.fields.push(new Field("customerLastName", this.paymentForm, true))
-    this.fields.push(new Field("customerEmail", this.paymentForm, true))
-    this.fields.push(new Field("customerPhone", this.paymentForm, true))
+    this.fields.push(new Field("cardholderName", this.paymentForm, true, 45))
+    this.fields.push(new Field("cardNumber", this.paymentForm, true, 19))
+    this.fields.push(new Field("expiryDate", this.paymentForm, true, 4))
+    this.fields.push(new Field("securityCode", this.paymentForm, true, 4))
+    this.fields.push(new Field("customerFirstName", this.paymentForm, true, 20))
+    this.fields.push(new Field("customerLastName", this.paymentForm, true, 20))
+    this.fields.push(new Field("customerEmail", this.paymentForm, true, 80))
+    this.fields.push(new Field("customerPhone", this.paymentForm, true, 19))
   }
 
   updateExistingFields() {

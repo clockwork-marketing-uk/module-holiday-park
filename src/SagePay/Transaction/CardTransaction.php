@@ -15,6 +15,7 @@ use Clockwork\HolidayPark\Interfaces\PaymentGatewayValidationInterface;
 class CardTransaction implements PaymentGatewayValidationInterface
 {
   public $transactionId;
+  public $response;
   private $sagePayApi;
   private $merchantSessionKey;
   private $customerDetails;
@@ -36,6 +37,8 @@ class CardTransaction implements PaymentGatewayValidationInterface
 
   private function createCardTransaction() {
     $paymentGatewayResponse = $this->sagePayApi->createCardTransaction($this->merchantSessionKey, $this->cardIdentifier, $this->customerDetails, $this->purchaseInfo);
+    $this->response = $paymentGatewayResponse;
+    // dd($paymentGatewayResponse->getData());
     if ($paymentGatewayResponse->valid) {
       $cardTransactionData = $paymentGatewayResponse->getData();
       if (!empty($cardTransactionData) && !empty($cardTransactionData['transactionId'] && !empty($cardTransactionData['status']))) {

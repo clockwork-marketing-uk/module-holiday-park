@@ -1,5 +1,6 @@
 import Booking from './booking'
 import { updateBookingStepper } from './booking-stepper'
+import { showFormFeedback } from './helpers/showFormFeedback'
 
 class BookingManager {
     constructor() {
@@ -21,7 +22,11 @@ class BookingManager {
         this.booking = new Booking(this.contactInfo, this.extras, this.confirmBooking, this.paymentInfo, this.bookingNo, this.bookingSummary)
         this.addEventListenersToButtons()
         this.goToNextStage(1)
-        console.log(this.currentState)
+        
+        const errors = this.bookingPage.querySelector('#form-errors')
+        if (errors) {
+            this.goToNextStage(5)
+        }
     }
 
     addEventListenersToButtons() {
@@ -91,7 +96,7 @@ class BookingManager {
     checkIfPaymentPage() {
         if (this.currentState == this.bookingStatesSize) {
             this.hideElement(this.backButton)
-            this.hideElement(this.bookingSummary)
+            // this.hideElement(this.bookingSummary)
         }
     }
 
@@ -118,15 +123,8 @@ class BookingManager {
             await this.goToNextStage(value)
         }
         else {
-            this.showFormFeedback(validation)
+            showFormFeedback(validation)
         }
-    }
-
-    showFormFeedback(validation) {
-        this.formFeedback.textContent = validation.message
-        validation.fields.forEach(field => {
-            this.formFeedback.textContent += field + " "
-        });
     }
 
     clearFormFeedback() {

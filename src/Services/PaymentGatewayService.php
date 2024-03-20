@@ -20,6 +20,7 @@ class PaymentGatewayService
 
   public static function makePayment($requestData, array $data) : PaymentResponse {
     $sagePay = new SagePay();
+
     $cardDetails = new CardDetails($requestData);
     $billingAddress = new BillingAddress($requestData);
     $customerDetails = new CustomerDetails(
@@ -29,5 +30,10 @@ class PaymentGatewayService
     $purchaseInfo = new PurchaseInfo($data);
 
     return $sagePay->payment($cardDetails, $customerDetails, $purchaseInfo);
+  }
+
+  public static function confirm3DSecure($transactionId, $cRes) {
+    $sagePay = new SagePay();
+    return $sagePay->confirm3DSecure($transactionId, $cRes);
   }
 }

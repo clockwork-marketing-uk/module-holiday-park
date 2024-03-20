@@ -11,16 +11,21 @@
 
             @foreach ($extras['oneOffs'] as $index => $extra)
                 <div class="option" data-code="{{ $extra->code }}">
-                    <strong>{{ $extra->name }} (max.{{ $extra->maximum_quantity }})</strong>
 
-                    <div><span class="price"></span></div>
+                    <div class="option-name">
+                        <strong>{{ $extra->name }} (max.{{ $extra->maximum_quantity }})</strong>
+                    </div>
 
-                    <select data-name="{{ $extra->name }}" data-code="{{ $extra->code }}" name="{{ $extra->code }}"
-                        id="" value="{{ $extra->default_quantity }}">
-                        @for ($i = $extra->minimum_quantity; $i <= $extra->maximum_quantity; $i++)
-                            <option value="{{ $i }}">{{ $i }}</option>
-                        @endfor
-                    </select>
+                    <div class="option-selector">
+                        <span class="price">£100</span>
+
+                        <select data-name="{{ $extra->name }}" data-code="{{ $extra->code }}"
+                            name="{{ $extra->code }}" id="" value="{{ $extra->default_quantity }}">
+                            @for ($i = $extra->minimum_quantity; $i <= $extra->maximum_quantity; $i++)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+                    </div>
                 </div>
             @endforeach
         </div>
@@ -32,13 +37,17 @@
             @foreach ($extras['perNights'] as $index => $extra)
                 <div class="option" data-code="{{ $extra->code }}">
 
-                    <strong>{{ $extra->name }}</strong>
+                    <div class="option-name">
+                        <strong>{{ $extra->name }}</strong>
+                    </div>
 
-                    <div><span class="price"></span></div>
+                    <div class="option-selector">
+                        <span class="price"></span>
 
-                    <input type="checkbox" id="" data-name="{{ $extra->name }}"
-                        data-code="{{ $extra->code }}" name="{{ $extra->code }}"
-                        value="{{ $extra->default_quantity }}" />
+                        <input type="checkbox" id="" data-name="{{ $extra->name }}"
+                            data-code="{{ $extra->code }}" name="{{ $extra->code }}"
+                            value="{{ $extra->default_quantity }}" />
+                    </div>
 
                 </div>
             @endforeach

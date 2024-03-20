@@ -16,7 +16,7 @@ try {
   // do nothing (lol)
 }
 
-Route::prefix($holiday_park_prefix)->group(function () {
+Route::prefix($holiday_park_prefix)->middleware(['web'])->group(function () {
   // Route::get("category/{slug}", [ParkAccommodationCategoryController::class, "category"])->name("park-accommodation.category");
   Route::get("{title}/book", [BookingController::class, "book"])->name("park-accommodation.book");
 });
@@ -45,6 +45,7 @@ Route::prefix("/cms/api/holiday-park/park-accommodation")
 Route::post('/holiday-park/get-availability', [ApiParkAccommodationController::class, 'findAvailability'])->name('holiday-park.get-availability');
 
 Route::prefix("holiday-park/booking")
+  ->middleware(['web'])
   ->name("holiday-park.booking")
   ->group(function () {
     Route::post('/update-contact', [ApiBookingController::class, 'updateContact'])->name('.update-contact');
@@ -55,6 +56,9 @@ Route::prefix("holiday-park/booking")
     Route::post('/get-master-booking-extras', [ApiBookingController::class, 'getMasterBookingExtras'])->name('.get-master-booking-extras');
 
     Route::post('/begin-payment', [BookingController::class, 'beginPayment'])->name('.begin-payment');
+    
+    Route::post('/3d-secure-receive-response', [BookingController::class, 'threeDSecureReceiveResponse'])->name('.3d-secure-receive-response');
 
+    Route::get('3d-secure-start', [BookingController::class, 'threeDSecureStart'])->name('.3d-secure-start');
     
   });

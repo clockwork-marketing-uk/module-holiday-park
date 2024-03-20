@@ -68,15 +68,14 @@ class SagePayApi
     $queryUrl = 'transactions';
     try {
       $totalPrice = (float) $purchaseInfo->total_price;
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
       $totalPrice = null;
     }
 
     if (empty($totalPrice)) {
       return new PaymentGatewayApiResponse(false, null, 'Price not included in transaction', []);
     }
-    
+
     $data = [
       'transactionType' => 'Payment',
       'vendorName' => $this->vendorName,
@@ -84,23 +83,63 @@ class SagePayApi
         'card' => [
           'merchantSessionKey' => $merchantSessionKey->getMerchantSessionKey(),
           'cardIdentifier' => $cardIdentifier->getCardIdentifier(),
-          'reusable' => false,
-          'save' => true,
+          // 'reusable' => false,
+          // 'save' => true,
         ],
       ],
       'vendorTxCode' => uniqid(),
       'amount' => $totalPrice,
       'currency' => 'GBP',
       'description' => 'Transaction Description',
-      '3DSecure' => [
-        'status' => 'IssuerNotEnrolled',
-      ],
-      'apply3DSecure' => 'force',
+      "apply3DSecure" => "UseMSPSetting",
+      "entryMethod" => "Ecommerce",
+
+
     ];
 
-    $data = array_merge($data, $customerDetails->getCustomerDetails());
+    $data = array_merge($data, $customerDetails->getCustomerDetails(), $this->getStrongCustomerAuthentication());
+
+    // dd($data);
 
     $response = Http::withBasicAuth($this->integrationKey, $this->integrationPassword)->post($this->endpoint . "$queryUrl", $data);
+
+    if ($response->successful()) {
+      $responseJson = $response->json();
+      if (!empty($responseJson) && !empty($responseJson['transactionId'] && $responseJson['status'])) {
+        return new PaymentGatewayApiResponse(true, $responseJson, 'Success');
+      }
+    } else {
+      Log::info($response->json());
+      return new PaymentGatewayApiResponse(false, null, 'Missing transactionId in response', $response->json());
+    }
+    return new PaymentGatewayApiResponse(false, null, 'Missing create transaction', $response->json());
+  }
+
+  private function getStrongCustomerAuthentication() : array
+  {
+    return [
+      "strongCustomerAuthentication" => [
+        "notificationURL" => route('holiday-park.booking.3d-secure-receive-response'),
+        "browserIP" => "151.2.243.57",
+        "browserAcceptHeader" => "text/html, application/json",
+        "browserJavascriptEnabled" => true,
+        "browserJavaEnabled" => false,
+        "browserLanguage" => "en",
+        "browserColorDepth" => "16",
+        "browserScreenHeight" => "768",
+        "browserScreenWidth" => "1200",
+        "browserTZ" => "0",
+        "browserUserAgent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:67.0) Gecko/20100101 Firefox/67.0",
+        "challengeWindowSize" => "Small",
+        "transType" => "GoodsAndServicePurchase",
+        "website" => "http://package-manager.test/"
+      ]
+    ];
+  }
+
+  public function secureChallenge($cRes, $transactionId) {
+    $queryUrl = "/transactions/$transactionId/3d-secure-challenge";
+    $response = Http::withBasicAuth($this->integrationKey, $this->integrationPassword)->post($this->endpoint . "$queryUrl", ["cRes" => $cRes]);
     if ($response->successful()) {
       $responseJson = $response->json();
       if (!empty($responseJson) && !empty($responseJson['transactionId'] && $responseJson['status'])) {

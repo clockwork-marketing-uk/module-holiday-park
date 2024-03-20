@@ -75,6 +75,7 @@ class HolidayParkApiService implements HolidayParkApiInterface
     $bookingResponse = EliteParks::getBooking($booking)->getData();
     if ($bookingResponse?->message == "ok") {
       $extras = self::getExtrasFromResponse($bookingResponse?->data?->Extra ?? null);
+      // dd($bookingResponse);
       return [
         "booking" => $bookingResponse?->data?->{'@attributes'},
         "extras" => $extras,

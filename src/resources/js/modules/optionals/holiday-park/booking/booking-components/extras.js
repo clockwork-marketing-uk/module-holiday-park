@@ -80,7 +80,7 @@ class Extras {
         this.fields.forEach(field => {
             const extra = this.extras.find(extra => field.name === extra.code);
             if (!extra) {
-                field.htmlElement.parentElement.remove()
+                field.htmlElement.parentElement.parentElement.remove()
             }
             else {
                 const priceField = field.htmlElement.parentElement.querySelector('.price')
@@ -94,9 +94,6 @@ class Extras {
                 else if (field.htmlElement.tagName == "SELECT") {
                     field.htmlElement.value = extra.quantity
                 }
-
-                // field.htmlElement.value = extra.quantity
-                // extra.quantity > 0 ? field.htmlElement.checked = true : false
             }
         });
     }

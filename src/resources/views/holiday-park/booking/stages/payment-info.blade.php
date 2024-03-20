@@ -1,18 +1,17 @@
-<div id="payment-info" class="hidden">
+<div id="payment-info">
     <form method="POST" action="{{ route('holiday-park.booking.begin-payment') }}" id="payment-form">
         @csrf
-        
+
         <div class=form-content>
             <h2 class="form-heading">Payment Info</h2>
             <p>This will be used to create your booking.</p>
         </div>
 
-        <div class=form-content>
-            <h2 class="form-heading">Billing Address</h2>
-            {{-- <p>This will be used to create your booking.</p> --}}
+        <div class="section-heading">
+            <h4>Billing Address</h4>
         </div>
 
-        <div class="form-fields">
+        <div class="form-fields form-section">
             <div class="sm:col-span-3">
                 <label for="address1" class="label">Address Line 1</label>
                 <input type="text" name="address1" id="address1" autocomplete="address1" value="88">
@@ -50,46 +49,47 @@
 
             <div class="hidden sm:col-span-3">
                 <label for="booking_no" class="label"></label>
-                <input type="hidden" name="booking_no" id="booking_no" autocomplete="booking_no" value="{{ $booking->booking_no }}">
+                <input type="hidden" name="booking_no" id="booking_no" autocomplete="booking_no"
+                    value="{{ $booking->booking_no }}">
             </div>
         </div>
 
-        <div class=form-content>
-            <h2 class="form-heading">Card Details</h2>
-            {{-- <p>This will be used to create your booking.</p> --}}
+        <div class="section-heading">
+            <h4>Card Details</h4>
         </div>
 
-        <div class="form-fields">
+        <div class="form-fields form-section">
             <div class="sm:col-span-3">
                 <label for="cardholderName" class="label">Card Holder Name</label>
-                <input type="text" name="cardholderName" id="cardholderName" autocomplete="cardholderName" value="Squidward Tentacles">
+                <input type="text" name="cardholderName" id="cardholderName" autocomplete="cardholderName"
+                    value="Squidward Tentacles">
             </div>
 
             <div class="sm:col-span-3">
-                <label for="cardNumber" class="label">Card Number</label>
-                <input type="text" name="cardNumber" id="cardNumber" autocomplete="cardNumber" value="4929000000006">
+                <label for="cardNumber" class="label">Card Number - no spaces</label>
+                <input type="text" name="cardNumber" id="cardNumber" autocomplete="cardNumber" minlength="15" value="4929000000006">
             </div>
 
             <div class="sm:col-span-3">
-                <label for="expiryDate" class="label">Expiry Date</label>
+                <label for="expiryDate" class="label">Expiry Date - MMYY</label>
                 <input type="text" name="expiryDate" id="expiryDate" autocomplete="expiryDate" value="0223">
             </div>
 
             <div class="sm:col-span-3">
-                <label for="securityCode" class="label">Security Code</label>
+                <label for="securityCode" class="label">Security Code - numeric</label>
                 <input type="text" name="securityCode" id="securityCode" autocomplete="securityCode" value="123">
             </div>
         </div>
 
-        <div class=form-content>
-            <h2 class="form-heading">Your Details</h2>
-            {{-- <p>This will be used to create your booking.</p> --}}
+        <div class="section-heading">
+            <h4>Your Details</h4>
         </div>
 
-        <div class="form-fields">
+        <div class="form-fields form-section">
             <div class="sm:col-span-3">
                 <label for="customerFirstName" class="label">First Name</label>
-                <input type="text" name="customerFirstName" id="customerFirstName" autocomplete="customerFirstName">
+                <input type="text" name="customerFirstName" id="customerFirstName"
+                    autocomplete="customerFirstName">
             </div>
 
             <div class="sm:col-span-3">
@@ -109,6 +109,9 @@
         </div>
     </form>
 
-    <button class="bg-blue-500 btn secondary-btn" type="submit" form="payment-form" value="Submit">Pay & Confirm Booking</button>
+    <div class="pay-now">
+        <button id="pay-now-button" class="btn secondary-btn pay-btn" type="submit" form="payment-form" value="Submit">
+            Pay & Confirm Booking</button>
+    </div>
 
 </div>

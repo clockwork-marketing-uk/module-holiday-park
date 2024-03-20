@@ -52,6 +52,16 @@ class InsertHolidayParkSettings extends Migration
         "weight" => "0",
         "group_id" => $groupId,
       ]);
+
+      $this->settings->insert([
+        "key" => "park_confirmation_page",
+        "value" => "",
+        "title" => "Booking Confirmation Page",
+        "description" => "The link to the booking confirmation page",
+        "type" => "dynamic-link",
+        "weight" => "0",
+        "group_id" => $groupId,
+      ]);
     }
   }
 
@@ -65,5 +75,6 @@ class InsertHolidayParkSettings extends Migration
     $this->setting_groups->where('title', '=', 'Holiday Park')->delete();
     $this->settings->where("key", "park_booking_success")->delete();
     $this->settings->where("key", "park_booking_failed")->delete();
+    $this->settings->where("key", "park_confirmation_page")->delete();
   }
 }
