@@ -29,12 +29,12 @@
 
             <div class="col-span-full">
                 <label for="address" class="label">Address Line 1</label>
-                <input type="text" name="address" id="address" autocomplete="address">
+                <input type="text" name="address" id="address" autocomplete="address-line1">
             </div>
 
             <div class="col-span-full">
                 <label for="address_2" class="label">Address Line 2</label>
-                <input type="text" name="address_2" id="address_2" autocomplete="address_2">
+                <input type="text" name="address_2" id="address_2" autocomplete="address-line2">
             </div>
 
             <div class="sm:col-span-2 sm:col-start-1">
@@ -49,7 +49,7 @@
 
             <div class="sm:col-span-2">
                 <label for="post_code" class="label">Postcode</label>
-                <input type="text" name="post_code" id="post_code" autocomplete="post_code">
+                <input type="text" name="post_code" id="post_code" autocomplete="postal-code">
             </div>
 
             <div class="col-span-full">
