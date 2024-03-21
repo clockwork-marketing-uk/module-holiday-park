@@ -99,8 +99,6 @@ class SagePayApi
 
     $data = array_merge($data, $customerDetails->getCustomerDetails(), $this->getStrongCustomerAuthentication());
 
-    // dd($data);
-
     $response = Http::withBasicAuth($this->integrationKey, $this->integrationPassword)->post($this->endpoint . "$queryUrl", $data);
 
     if ($response->successful()) {
@@ -117,10 +115,13 @@ class SagePayApi
 
   private function getStrongCustomerAuthentication() : array
   {
+    $websiteUrl = env("APP_URL") ?? "";
+    $customerIp = request()->ip() ?? "";
+    $userAgent = request()->userAgent() ?? "";
     return [
       "strongCustomerAuthentication" => [
         "notificationURL" => route('holiday-park.booking.3d-secure-receive-response'),
-        "browserIP" => "151.2.243.57",
+        "browserIP" => $customerIp,
         "browserAcceptHeader" => "text/html, application/json",
         "browserJavascriptEnabled" => true,
         "browserJavaEnabled" => false,
@@ -129,10 +130,10 @@ class SagePayApi
         "browserScreenHeight" => "768",
         "browserScreenWidth" => "1200",
         "browserTZ" => "0",
-        "browserUserAgent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:67.0) Gecko/20100101 Firefox/67.0",
+        "browserUserAgent" => $userAgent,
         "challengeWindowSize" => "Small",
         "transType" => "GoodsAndServicePurchase",
-        "website" => "http://package-manager.test/"
+        "website" => $websiteUrl
       ]
     ];
   }
