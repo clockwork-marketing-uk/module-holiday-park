@@ -1,10 +1,11 @@
 import Booking from './booking'
 import { updateBookingStepper } from './booking-stepper'
+import { showFormFeedback } from './helpers/showFormFeedback'
 
 class BookingManager {
     constructor() {
         this.bookingPage = document.querySelector('#holiday-park-booking-page')
-        this.contactInfo = this.bookingPage.querySelector('#contact-info')
+        this.contactInfo = this.bookingPage.querySelector('#booking-info')
         this.confirmBooking = this.bookingPage.querySelector('#confirm-booking')
         this.extras = this.bookingPage.querySelector('#extras-page')
         this.paymentInfo = this.bookingPage.querySelector('#payment-info')
@@ -21,7 +22,11 @@ class BookingManager {
         this.booking = new Booking(this.contactInfo, this.extras, this.confirmBooking, this.paymentInfo, this.bookingNo, this.bookingSummary)
         this.addEventListenersToButtons()
         this.goToNextStage(1)
-        console.log(this.currentState)
+        
+        const errors = this.bookingPage.querySelector('#form-errors')
+        if (errors) {
+            this.goToNextStage(3)
+        }
     }
 
     addEventListenersToButtons() {
@@ -91,7 +96,7 @@ class BookingManager {
     checkIfPaymentPage() {
         if (this.currentState == this.bookingStatesSize) {
             this.hideElement(this.backButton)
-            this.hideElement(this.bookingSummary)
+            // this.hideElement(this.bookingSummary)
         }
     }
 
@@ -103,10 +108,8 @@ class BookingManager {
         this.checkIfPaymentPage()
         this.hideAllPages()
         if (Math.sign(value) == 1) {
-            this.showElement(this.loadingSpinner)
             await this.booking.updateBookingStage(this.currentState)
             await this.booking.updateNextBookingStage(this.currentState)
-            this.hideElement(this.loadingSpinner)
         }
         this.showElement(this.bookingStates[this.currentState])
         this.clearFormFeedback()
@@ -118,15 +121,8 @@ class BookingManager {
             await this.goToNextStage(value)
         }
         else {
-            this.showFormFeedback(validation)
+            showFormFeedback(validation)
         }
-    }
-
-    showFormFeedback(validation) {
-        this.formFeedback.textContent = validation.message
-        validation.fields.forEach(field => {
-            this.formFeedback.textContent += field + " "
-        });
     }
 
     clearFormFeedback() {

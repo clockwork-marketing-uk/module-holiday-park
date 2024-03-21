@@ -1,20 +1,28 @@
 
 class Field {
-    constructor(name, formElement, required, length = null) {
+    constructor(name, formElement, required, length = null, pattern = null) {
         this.name = name
         this.required = required
         this.length = length
         this.formElement = formElement
         this.htmlElement = this.findHtmlElement()
         this.value = ""
+        this.pattern = pattern
         this.addRequiredAttribute()
         this.addMaxLengthAttribute()
+        this.addPatternAttribute()
         this.addEventListenerToInput()
     }
 
     addRequiredAttribute() {
         if (this.htmlElement && this.required) {
-            this.htmlElement.setAttribute("required", this.required)
+            this.htmlElement.setAttribute("required", "")
+        }
+    }
+
+    addPatternAttribute() {
+        if (this.htmlElement && this.pattern) {
+            this.htmlElement.setAttribute("pattern", this.pattern)
         }
     }
 

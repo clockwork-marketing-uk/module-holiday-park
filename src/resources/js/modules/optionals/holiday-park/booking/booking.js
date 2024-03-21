@@ -11,7 +11,7 @@ class Booking {
         this.contact = new Contact(bookingInfoForm, bookingNo)
         this.extras = new Extras(extrasForm, bookingNo, bookingSummary)
         this.notes = new Notes(bookingInfoForm)
-        this.payment = new Payment(paymentForm)
+        this.payment = new Payment(paymentForm, this.contact)
         this.confirmBooking = new ConfirmBooking(confirmBooking, bookingNo)
 
         this.stageArray = [this.contact, this.notes, this.extras, this.confirmBooking, this.payment]

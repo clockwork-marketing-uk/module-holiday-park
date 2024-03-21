@@ -1,26 +1,81 @@
-<div id="booking-summary" class="mx-auto mb-10 top-10 md:sticky">
-    @imageLazy($accommodation->images[0], ['class' => 'w-96'])
+@inject('FormatDateHelper', '\Clockwork\HolidayPark\Helpers\FormatDateHelper')
 
-    <div class="mt-2">Arrive {{ $stay->arrival_date }}</div>
-    <div>Depart {{ $stay->departure_date }}</div>
-
-    <div class="mt-4">Number of Nights {{ $stay->no_of_nights }}</div>
-    <div id="total-price">Price {{ $stay->price }}</div>
-
-
-    <div id="extras-summary">
-
-    </div>
-
-    <div class="flex flex-row extras-summary-template gap-x-4">
-        <div class="quantity">
+<div id="booking-summary">
+    <div class="inner-wrap">
+        <div class="section-heading">
+            <h2 class="title">Reservation Details</h2>
+            <p class="text">You would like to make the following reservation.</p>
         </div>
-        <div class="description">
+
+        <div class="accommodation-type">
+            @imageLazy($accommodation->images[0], ['class' => 'w-full h-auto'])
+            <div class="selected-accommodation">
+                <h4 class="title">{{ $accommodation->base->title }}</h4>
+                <p class="category">Category</p>
+            </div>
         </div>
-        <div class="price">
+
+        <div class="options-list">
+            <div class="reservation-option">
+                <strong>Arrival Date</strong>
+                {{ $FormatDateHelper::formatDate($stay->arrival_date, "m/d/y", "jS F o") }}
+                {{-- this date format - 20nd of April 2024 --}}
+            </div>
+
+            <div class="reservation-option">
+                <strong>Departure Date</strong>
+                {{ $FormatDateHelper::formatDate($stay->departure_date, "m/d/y", "jS F o") }}
+                {{-- this date format - 27nd of April 2024 --}}
+            </div>
+
+            <div class="reservation-option">
+                <strong>Number of Nights</strong>
+                {{ $booking->no_of_nights }}
+            </div>
+
+            <div class="reservation-option">
+                <strong>Number of Guests</strong>
+                {{ $booking->no_of_adults }}
+            </div>
+
+            <div class="reservation-option">
+                <strong>Number of Pets</strong>
+                {{ $booking->no_of_pets }}
+            </div>
         </div>
-        <div class="pricing-type">
+
+        <div id="loading-spinner-booking-summary" class="flex justify-center hidden mt-10">
+            <i class="w-40 h-40 fal fa-spinner-third animate-spin"></i>
         </div>
-        
+
+        <div class="hidden reserved-extras" id="extras-summary-container">
+            <div class="title">Selected Extras</div>
+            <div class="extras-summary-list" id="extras-summary">
+
+            </div>
+        </div>
+
+        <div class="selected-extra extras-summary-template">
+            <div class="text-left">
+                <span class="quantity">
+                </span>
+
+                <span class="description">
+                </span>
+            </div>
+
+            <div class="text-right">
+                <span class="price">
+                </span>
+                <small class="pricing-type">
+                </small>
+            </div>
+        </div>
+
+        <div class="stay-price">
+            Total Price:
+            <strong id="total-price"></strong>
+        </div>
+
     </div>
 </div>

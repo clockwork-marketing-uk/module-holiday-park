@@ -224,6 +224,15 @@
                   text-field="name"
                 />
               </b-form-group>
+
+              <b-button
+                class="btn-sm"
+                variant="outline-info"
+                @click="fetchEliteData"
+              >
+              Fetch the latest API properties *
+              </b-button>
+              <div class="mt-1 text-muted">* should only be used once or twice a day</div>
           </b-tab>
         </b-tabs>
       </div>
@@ -494,6 +503,19 @@ export default {
         }
       })()
     },
+    fetchEliteData() { 
+      ;(async () => {
+        try {
+          // Fetch model data
+
+          const response = await this.$http.get("holiday-park/park-accommodation/get-setup")
+
+        } catch (error) {
+          console.error(error)
+          this.failed = true
+        }
+      })()
+     }
   },
   mounted() {
     this.apiPropertiesLoaded = false

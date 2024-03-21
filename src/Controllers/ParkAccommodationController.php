@@ -2,11 +2,8 @@
 
 namespace Clockwork\HolidayPark\Controllers;
 
-use Illuminate\Http\Request;
+use Clockwork\EliteParks\Jobs\GetSetup;
 use Clockwork\Core\Abstracts\CmsController;
-use Clockwork\EliteParks\Facades\EliteParks;
-use Clockwork\Accommodation\Models\Accommodation;
-use Clockwork\HolidayPark\Services\HolidayParkApiService;
 use Clockwork\HolidayPark\Repositories\ParkAccommodationRepository;
 
 class ParkAccommodationController extends CmsController
@@ -17,5 +14,9 @@ class ParkAccommodationController extends CmsController
   {
     $this->parkAccommodationRepository = $parkAccommodationRepository;
     $this->module = "holidaypark";
+  }
+
+  public function dispatchGetSetupJob() {
+    GetSetup::dispatchSync();
   }
 }

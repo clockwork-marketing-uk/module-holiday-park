@@ -5,6 +5,8 @@ import { getMasterBookingExtras } from '../api/getMasterBookingExtras'
 import { formatMoney } from '../helpers/formatMoney'
 import { updateBookingSummary } from '../helpers/updateBookingSummary'
 import { showLoadingSpinner, hideLoadingSpinner } from '../helpers/loadingSpinner'
+import { showExtrasSummaryLoading, hideExtrasSummaryLoading } from '../helpers/extrasSummaryLoading'
+import { showExtrasLoading, hideExtrasLoading } from '../helpers/extrasLoading'
 
 class Extras {
     fields = []
@@ -14,6 +16,8 @@ class Extras {
         this.extrasForm = form
         this.bookingNo = bookingNo
         this.masterExtras = this.getMasterBookingExtras()
+        this.bookingSummary = bookingSummary
+        this.extrasWrap = this.extrasForm.querySelector('#extras-wrap')
 
         this.oneOffExtrasSection = this.extrasForm.querySelector('#one-off-extras')
         this.perNightExtrasSection = this.extrasForm.querySelector('#per-night-extras')
@@ -33,12 +37,13 @@ class Extras {
 
     async update(currentStage) {
         if (currentStage == this.stage) {
-            console.log('updating extras info')
         }
     }
 
     async onLoad(currentStage) {
         if (currentStage == this.stage) {
+            this.loading()
+
             this.booking = await getBooking(this.bookingNo)
             if (this.booking.booking.extras) {
                 this.extras = this.booking.booking.extras
@@ -47,8 +52,20 @@ class Extras {
             else {
                 this.onLoad(this.currentStage)
             }
-            
+
+            this.stopLoading()
+
         }
+    }
+
+    loading() {
+        showExtrasLoading()
+        this.extrasWrap.classList.add('hidden')
+    }
+
+    stopLoading() {
+        this.extrasWrap.classList.remove('hidden')
+        hideExtrasLoading()
     }
 
     createFields() {
@@ -70,7 +87,7 @@ class Extras {
                 field.htmlElement.parentElement.parentElement.remove()
             }
             else {
-                const priceField = field.htmlElement.parentElement.parentElement.querySelector('.price')
+                const priceField = field.htmlElement.parentElement.querySelector('.price')
                 if (priceField) {
                     priceField.textContent = formatMoney(extra.unit_price)
                 }
@@ -81,9 +98,6 @@ class Extras {
                 else if (field.htmlElement.tagName == "SELECT") {
                     field.htmlElement.value = extra.quantity
                 }
-
-                // field.htmlElement.value = extra.quantity
-                // extra.quantity > 0 ? field.htmlElement.checked = true : false
             }
         });
     }
@@ -91,9 +105,11 @@ class Extras {
     addEventListenersToInputs() {
         this.oneOffExtrasInputs.forEach(input => {
             input.addEventListener("change", async (event) => {
+                showExtrasSummaryLoading()
                 this.updateSelectedExtras(event.target.dataset.code, event.target.value)
                 await this.updateExtras()
                 await updateBookingSummary(this.bookingNo)
+                hideExtrasSummaryLoading()
             });
         });
 

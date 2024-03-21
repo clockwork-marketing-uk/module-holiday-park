@@ -19,11 +19,15 @@ async function updateBookingSummary(bookingNumber) {
     }
 
     function updateExtras () {
+        console.log('update booking summary extras')
         const extrasSummary = bookingSummary.querySelector('#extras-summary')
+        const extrasSummaryContainer = bookingSummary.querySelector('#extras-summary-container')
         extrasSummary.innerHTML = ""
+        let hasSelectedExtras = false
         if (booking.booking.extras) {
             booking.booking.extras.forEach(extra => {
                 if (extra.quantity > 0) {
+                    hasSelectedExtras = true
                     const extrasSummaryTemplate = bookingSummary.querySelector('.extras-summary-template').cloneNode(true)
                     const price = extrasSummaryTemplate.querySelector('.price')
                     const description = extrasSummaryTemplate.querySelector('.description')
@@ -38,6 +42,13 @@ async function updateBookingSummary(bookingNumber) {
                     extrasSummary.appendChild(extrasSummaryTemplate)
                 }
             });
+        }
+
+        if (hasSelectedExtras) {
+            extrasSummaryContainer.classList.remove('hidden')
+        }
+        else {
+            extrasSummaryContainer.classList.add('hidden')
         }
 
         

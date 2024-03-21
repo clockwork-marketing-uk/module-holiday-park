@@ -75,6 +75,7 @@ class HolidayParkApiService implements HolidayParkApiInterface
     $bookingResponse = EliteParks::getBooking($booking)->getData();
     if ($bookingResponse?->message == "ok") {
       $extras = self::getExtrasFromResponse($bookingResponse?->data?->Extra ?? null);
+      // dd($bookingResponse);
       return [
         "booking" => $bookingResponse?->data?->{'@attributes'},
         "extras" => $extras,
@@ -162,5 +163,55 @@ class HolidayParkApiService implements HolidayParkApiInterface
   public static function getMasterBookingExtras()
   {
     return MasterBookingExtra::all();
+  }
+
+  public static function tagBooking($bookingNo)
+  {
+    $bookingResponse = EliteParks::tagBooking($bookingNo)->getData();
+    if ($bookingResponse?->message == "ok") {
+      return $bookingResponse;
+    }
+    else {
+      return false;
+    }
+  }
+
+  public static function bookingSuccess(string $bookingNo, string $price) {
+    $makePayment = self::makePayment($bookingNo, $price);
+    $confirmBooking = self::confirmBooking($bookingNo);
+  }
+
+  public static function bookingFailed(string $bookingNo) {
+    $untagBooking = self::untagBooking($bookingNo);
+  }
+
+  public static function makePayment(string $bookingNo, string $price) {
+    if (!empty($bookingNo) && !empty($price)) {
+      $response = EliteParks::makePayment($bookingNo, $price);
+      if (!empty($response)) {
+        return $response;
+      }
+    }
+    return null;
+  }
+
+  public static function confirmBooking(string $bookingNo) {
+    if (!empty($bookingNo)) {
+      $response = EliteParks::confirmBooking($bookingNo);
+      if (!empty($response)) {
+        return $response;
+      }
+    }
+    return null;
+  }
+
+  public static function untagBooking(string $bookingNo) {
+    if (!empty($bookingNo)) {
+      $response = EliteParks::untagBooking($bookingNo);
+      if (!empty($response)) {
+        return $response;
+      }
+    }
+    return null;
   }
 }
