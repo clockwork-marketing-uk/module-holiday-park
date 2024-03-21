@@ -25,7 +25,7 @@ class BookingManager {
         
         const errors = this.bookingPage.querySelector('#form-errors')
         if (errors) {
-            this.goToNextStage(5)
+            this.goToNextStage(3)
         }
     }
 
@@ -108,10 +108,8 @@ class BookingManager {
         this.checkIfPaymentPage()
         this.hideAllPages()
         if (Math.sign(value) == 1) {
-            this.showElement(this.loadingSpinner)
             await this.booking.updateBookingStage(this.currentState)
             await this.booking.updateNextBookingStage(this.currentState)
-            this.hideElement(this.loadingSpinner)
         }
         this.showElement(this.bookingStates[this.currentState])
         this.clearFormFeedback()
