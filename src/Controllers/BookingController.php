@@ -140,9 +140,9 @@ class BookingController extends CmsController
   {
     $request->validate([
       'cardNumber' => 'required|digits_between:15,19',
-      'expiryDate' => 'required',
+      'expiryDate' => 'required|digits:4',
       'cardholderName' => 'required',
-      'securityCode' => 'required',
+      'securityCode' => 'required|digits_between:3,4',
 
       'customerFirstName' => 'required',
       'customerLastName' => 'required',
