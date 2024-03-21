@@ -155,8 +155,6 @@ class BookingController extends CmsController
       'address1' => 'required',
     ]);
 
-    // dd($validatedData);
-
     $bookingNo = $request->booking_no;
     $booking = HolidayParkApiService::getBooking($bookingNo);
     $booking = $booking['booking'];
