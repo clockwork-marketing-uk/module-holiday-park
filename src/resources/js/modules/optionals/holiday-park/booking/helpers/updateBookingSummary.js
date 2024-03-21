@@ -21,6 +21,7 @@ async function updateBookingSummary(bookingNumber) {
     function updateExtras () {
         console.log('update booking summary extras')
         const extrasSummary = bookingSummary.querySelector('#extras-summary')
+        const extrasSummaryContainer = bookingSummary.querySelector('#extras-summary-container')
         extrasSummary.innerHTML = ""
         let hasSelectedExtras = false
         if (booking.booking.extras) {
@@ -44,10 +45,10 @@ async function updateBookingSummary(bookingNumber) {
         }
 
         if (hasSelectedExtras) {
-            extrasSummary.parentElement.classList.remove('hidden')
+            extrasSummaryContainer.classList.remove('hidden')
         }
         else {
-            extrasSummary.parentElement.classList.add('hidden')
+            extrasSummaryContainer.classList.add('hidden')
         }
 
         

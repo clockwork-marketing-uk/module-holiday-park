@@ -1,11 +1,15 @@
-<div id="extras-page" data-update_extras_route="{{ route('holiday-park.booking.update-extras') }}">
+<div id="extras-page" class="hidden" data-update_extras_route="{{ route('holiday-park.booking.update-extras') }}">
 
     <div class=section-title>
         <h2 class="title">Availabile Extras</h2>
         <p>Would you like to add any of the following options.</p>
     </div>
 
-    <div class="extras-wrap">
+    <div id="loading-spinner-extras" class="flex justify-center hidden mt-10">
+        <i class="w-40 h-40 fal fa-spinner-third animate-spin"></i>
+    </div>
+
+    <div id="extras-wrap" class="hidden extras-wrap">
         <div class="extra-option" id="one-off-extras">
             <div class="title">One off Extras</div>
 

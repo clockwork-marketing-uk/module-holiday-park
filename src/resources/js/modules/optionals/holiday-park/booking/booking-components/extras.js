@@ -5,6 +5,8 @@ import { getMasterBookingExtras } from '../api/getMasterBookingExtras'
 import { formatMoney } from '../helpers/formatMoney'
 import { updateBookingSummary } from '../helpers/updateBookingSummary'
 import { showLoadingSpinner, hideLoadingSpinner } from '../helpers/loadingSpinner'
+import { showExtrasSummaryLoading, hideExtrasSummaryLoading } from '../helpers/extrasSummaryLoading'
+import { showExtrasLoading, hideExtrasLoading } from '../helpers/extrasLoading'
 
 class Extras {
     fields = []
@@ -14,6 +16,8 @@ class Extras {
         this.extrasForm = form
         this.bookingNo = bookingNo
         this.masterExtras = this.getMasterBookingExtras()
+        this.bookingSummary = bookingSummary
+        this.extrasWrap = this.extrasForm.querySelector('#extras-wrap')
 
         this.oneOffExtrasSection = this.extrasForm.querySelector('#one-off-extras')
         this.perNightExtrasSection = this.extrasForm.querySelector('#per-night-extras')
@@ -55,13 +59,13 @@ class Extras {
     }
 
     loading() {
-        showLoadingSpinner()
-        this.extrasForm.classList.add('hidden')
+        showExtrasLoading()
+        this.extrasWrap.classList.add('hidden')
     }
 
     stopLoading() {
-        this.extrasForm.classList.remove('hidden')
-        hideLoadingSpinner()
+        this.extrasWrap.classList.remove('hidden')
+        hideExtrasLoading()
     }
 
     createFields() {
@@ -101,9 +105,11 @@ class Extras {
     addEventListenersToInputs() {
         this.oneOffExtrasInputs.forEach(input => {
             input.addEventListener("change", async (event) => {
+                showExtrasSummaryLoading()
                 this.updateSelectedExtras(event.target.dataset.code, event.target.value)
                 await this.updateExtras()
                 await updateBookingSummary(this.bookingNo)
+                hideExtrasSummaryLoading()
             });
         });
 
