@@ -8,6 +8,7 @@ use Clockwork\Pages\Models\Page;
 use Illuminate\Support\Facades\Log;
 use Clockwork\Core\Helpers\TagParser;
 use Clockwork\Settings\Helpers\Setting;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Clockwork\Core\Abstracts\CmsController;
 use Clockwork\EliteParks\Facades\EliteParks;
@@ -176,30 +177,15 @@ class BookingController extends CmsController
     }
 
     if (!$payment->valid) {
+      if (!empty($payment->data->errors)) {
+        return Redirect::back()->withErrors($payment->data->errors);
+      }
       HolidayParkApiService::bookingFailed($bookingNo);
       return $this->redirectToFailedPage();
     }
 
     return redirect('/contact');
   }
-
-  // "_token" => null
-  // "address1" => "Clockwork Marketing"
-  // "address2" => "2"
-  // "address3" => "3"
-  // "city" => "Brixham"
-  // "postalCode" => "tq59wadww"
-  // "country" => "GB"
-  // "state" => null
-  // "booking_no" => "BK0013110"
-  // "cardholderName" => "Squidward Tentacles beans"
-  // "cardNumber" => "4929000000006wasd"
-  // "expiryDate" => "000000wasd"
-  // "securityCode" => "wa123"
-  // "customerFirstName" => "Tom"
-  // "customerLastName" => "Allenbrook"
-  // "customerEmail" => "tom.allenbrook@clock-work.co.uk"
-  // "customerPhone" => "07753991437"
 
   private function validatePaymentRequest(Request $request)
   {

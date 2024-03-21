@@ -44,7 +44,7 @@ class SagePay implements PaymentGatewayInterface
             return $this->redirectToAcsUrl($this->cardTransaction->response->data, $purchaseInfo);
           }
         }
-        return new PaymentResponse(false, "Couldn't create transaction", null, null, $this->cardTransaction->response->data);
+        return new PaymentResponse(false, "Couldn't create transaction", null, null, $this->cardTransaction->response);
       }
       return new PaymentResponse(false, "Couldn't create card identifier", null, $this->cardIdentifier->getErrors());
     }
