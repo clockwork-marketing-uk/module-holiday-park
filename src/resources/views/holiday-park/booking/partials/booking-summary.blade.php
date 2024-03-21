@@ -44,7 +44,11 @@
             </div>
         </div>
 
-        <div class="hidden reserved-extras">
+        <div id="loading-spinner-booking-summary" class="flex justify-center hidden mt-10">
+            <i class="w-40 h-40 fal fa-spinner-third animate-spin"></i>
+        </div>
+
+        <div class="hidden reserved-extras" id="extras-summary-container">
             <div class="title">Selected Extras</div>
             <div class="extras-summary-list" id="extras-summary">
 

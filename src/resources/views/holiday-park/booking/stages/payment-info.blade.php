@@ -37,9 +37,9 @@
                 <input type="text" name="postalCode" id="postalCode" autocomplete="postalCode" value="412">
             </div>
 
-            <div class="sm:col-span-3">
+            <div class="hidden sm:col-span-3">
                 <label for="country" class="label">Country</label>
-                <input type="text" name="country" id="country" autocomplete="country" value="GB">
+                <input type="hidden" name="country" id="country" autocomplete="country" value="GB">
             </div>
 
             <div class="hidden sm:col-span-3">
@@ -67,17 +67,17 @@
 
             <div class="sm:col-span-3">
                 <label for="cardNumber" class="label">Card Number - no spaces</label>
-                <input type="text" name="cardNumber" id="cardNumber" autocomplete="cardNumber" minlength="15" value="4929000000006">
+                <input type="text" name="cardNumber" id="cardNumber" autocomplete="cardNumber" minlength="13" value="4929000000006">
             </div>
 
             <div class="sm:col-span-3">
                 <label for="expiryDate" class="label">Expiry Date - MMYY</label>
-                <input type="text" name="expiryDate" id="expiryDate" autocomplete="expiryDate" value="0223">
+                <input type="text" name="expiryDate" id="expiryDate" autocomplete="expiryDate" minlength="4" value="0223">
             </div>
 
             <div class="sm:col-span-3">
                 <label for="securityCode" class="label">Security Code - numeric</label>
-                <input type="text" name="securityCode" id="securityCode" autocomplete="securityCode" value="123">
+                <input type="text" name="securityCode" id="securityCode" autocomplete="securityCode" minlength="3" value="123">
             </div>
         </div>
 
@@ -108,6 +108,14 @@
             </div>
         </div>
     </form>
+
+    @if ($errors->any())
+        <div id="form-errors" class="my-6">
+            @foreach ($errors->all() as $error)
+                <li class="text-red-500">{{ $error }}</li>
+            @endforeach
+        </div>
+    @endif
 
     <div class="pay-now">
         <button id="pay-now-button" class="btn secondary-btn pay-btn" type="submit" form="payment-form" value="Submit">

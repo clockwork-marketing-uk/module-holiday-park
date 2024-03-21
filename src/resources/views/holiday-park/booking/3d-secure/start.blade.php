@@ -15,12 +15,13 @@
 @section('title', '3d Secure Authentication')
 
 @section('content')
-<div class="flex justify-center w-full mt-24">
+
+<div class="flex justify-center w-full my-32">
     <form action="{{ $acsUrl }}" method="post">
         <input type="hidden" name="creq" value="{{ $creq }}" />     
         <input type="hidden" name="threeDSSessionData" value="{{ $threeDSSessionData }}" />     
         <p>Please click button below to proceed to 3D secure.</p>
-        <input type="submit" value="Go"/>   
+        <input class="btn primary-btn" type="submit" value="Go"/>   
     </form>
 </div>
     
