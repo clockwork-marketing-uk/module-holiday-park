@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e38794cbceb835b53c02bf06ee926e9",
+    "content-hash": "7fc29ecf7c0e37fc37379610748fb6d2",
     "packages": [
         {
             "name": "brick/math",
@@ -132,16 +132,16 @@
         },
         {
             "name": "clockwork-marketing-dev/elite-parks-api",
-            "version": "1.0.4",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "git@github.com:clockwork-marketing-uk/elite-parks-api.git",
-                "reference": "b777a1d210ca39631d3faaa6dd139915f66bfba7"
+                "reference": "9592b6be626937f753aecf34e89e598a8cd5893c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clockwork-marketing-uk/elite-parks-api/zipball/b777a1d210ca39631d3faaa6dd139915f66bfba7",
-                "reference": "b777a1d210ca39631d3faaa6dd139915f66bfba7",
+                "url": "https://api.github.com/repos/clockwork-marketing-uk/elite-parks-api/zipball/9592b6be626937f753aecf34e89e598a8cd5893c",
+                "reference": "9592b6be626937f753aecf34e89e598a8cd5893c",
                 "shasum": ""
             },
             "require": {
@@ -168,10 +168,10 @@
             ],
             "description": "Elite Parks API",
             "support": {
-                "source": "https://github.com/clockwork-marketing-uk/elite-parks-api/tree/1.0.4",
+                "source": "https://github.com/clockwork-marketing-uk/elite-parks-api/tree/1.0.5",
                 "issues": "https://github.com/clockwork-marketing-uk/elite-parks-api/issues"
             },
-            "time": "2024-02-01T12:12:32+00:00"
+            "time": "2024-03-19T10:12:56+00:00"
         },
         {
             "name": "clockwork-marketing-dev/module-core",
