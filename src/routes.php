@@ -59,8 +59,8 @@ Route::prefix("holiday-park/booking")
 
     Route::post('/begin-payment', [BookingController::class, 'beginPayment'])->name('.begin-payment');
     
-    Route::post('/3d-secure-receive-response', [BookingController::class, 'threeDSecureReceiveResponse'])->name('.3d-secure-receive-response');
-
     Route::get('3d-secure-start', [BookingController::class, 'threeDSecureStart'])->name('.3d-secure-start');
     
   });
+
+Route::post('holiday-park/booking/3d-secure-receive-response', [BookingController::class, 'threeDSecureReceiveResponse'])->name('holiday-park.booking.3d-secure-receive-response');
