@@ -24,15 +24,6 @@
             
         </div>
 
-        
-        @if ($errors->any())
-        <div id="form-errors">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </div>
-        @endif
-
         <div class="booking-nav">
             <div class="cursor-pointer btn secondary-btn" id="back-button">
                 <i class="my-auto cursor-pointer fal fa-angle-left"></i>
