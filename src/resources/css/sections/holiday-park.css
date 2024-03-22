@@ -195,10 +195,14 @@ section.accommodation {
   }
 
   .no-results {
-    @apply justify-center hidden text-center mt-14;
+    @apply justify-center text-center mt-14;
   }
 
   .property-list {
-    @apply hidden mt-10;
+    @apply mt-10;
+  }
+
+  .hidden {
+    display: none !important;
   }
 }
