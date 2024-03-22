@@ -132,16 +132,16 @@
         },
         {
             "name": "clockwork-marketing-dev/elite-parks-api",
-            "version": "1.0.6",
+            "version": "1.0.7",
             "source": {
                 "type": "git",
                 "url": "git@github.com:clockwork-marketing-uk/elite-parks-api.git",
-                "reference": "c193a270697749cd062bac829e6501d233aa787d"
+                "reference": "f92c22f8aa8b7013b0d54124390f782ef02de7ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clockwork-marketing-uk/elite-parks-api/zipball/c193a270697749cd062bac829e6501d233aa787d",
-                "reference": "c193a270697749cd062bac829e6501d233aa787d",
+                "url": "https://api.github.com/repos/clockwork-marketing-uk/elite-parks-api/zipball/f92c22f8aa8b7013b0d54124390f782ef02de7ab",
+                "reference": "f92c22f8aa8b7013b0d54124390f782ef02de7ab",
                 "shasum": ""
             },
             "require": {
@@ -161,10 +161,10 @@
             ],
             "description": "Elite Parks API",
             "support": {
-                "source": "https://github.com/clockwork-marketing-uk/elite-parks-api/tree/1.0.6",
+                "source": "https://github.com/clockwork-marketing-uk/elite-parks-api/tree/1.0.7",
                 "issues": "https://github.com/clockwork-marketing-uk/elite-parks-api/issues"
             },
-            "time": "2024-03-22T04:35:10+00:00"
+            "time": "2024-03-22T04:58:52+00:00"
         },
         {
             "name": "clockwork-marketing-dev/module-core",
