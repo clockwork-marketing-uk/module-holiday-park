@@ -51,15 +51,13 @@ class BookingController extends CmsController
           $extras = HolidayParkApiService::getExtras();
 
           $confirmationPage = $this->findConfirmationPage();
-
-
-          return view("holidaypark::holiday-park.booking.book", [
+          return view($this->getViewName("holidaypark::holiday-park.booking.book"), [
             "parkAccommodation" => $parkAccommodation,
             "accommodation" => $accommodation,
             "stay" => $stay,
             "booking" => $booking,
             "extras" => $extras,
-            "confirmationPage" => $confirmationPage
+            "confirmationPage" => $confirmationPage,
           ]);
         }
       }
@@ -73,7 +71,7 @@ class BookingController extends CmsController
     if (!empty($confirmationPageDynamicLink)) {
       $confirmationPageUrl = TagParser::parse($confirmationPageDynamicLink);
       if (!empty($confirmationPageUrl)) {
-        $confirmationPageBase = Base::where('url', '=', $confirmationPageUrl)->first() ?? null;
+        $confirmationPageBase = Base::where("url", "=", $confirmationPageUrl)->first() ?? null;
         return Page::find($confirmationPageBase->baseable_id) ?? null;
       }
     }
@@ -139,32 +137,31 @@ class BookingController extends CmsController
   public function beginPayment(Request $request)
   {
     $request->validate([
-      'cardNumber' => 'required|digits_between:15,19',
-      'expiryDate' => 'required|digits:4',
-      'cardholderName' => 'required',
-      'securityCode' => 'required|digits_between:3,4',
+      "cardNumber" => "required|digits_between:15,19",
+      "expiryDate" => "required|digits:4",
+      "cardholderName" => "required",
+      "securityCode" => "required|digits_between:3,4",
 
-      'customerFirstName' => 'required',
-      'customerLastName' => 'required',
-      'customerEmail' => 'required',
-      'customerPhone' => 'required',
+      "customerFirstName" => "required",
+      "customerLastName" => "required",
+      "customerEmail" => "required",
+      "customerPhone" => "required",
 
-      'city' => 'required',
-      'postalCode' => 'required',
-      'address1' => 'required',
+      "city" => "required",
+      "postalCode" => "required",
+      "address1" => "required",
     ]);
 
     // dd($validatedData);
 
     $bookingNo = $request->booking_no;
     $booking = HolidayParkApiService::getBooking($bookingNo);
-    $booking = $booking['booking'];
+    $booking = $booking["booking"];
     $totalPrice = $booking->total_price;
     $booking->reference = $booking->booking_no;
     $booking = (array) $booking;
 
     $payment = PaymentGatewayService::makePayment($request->all(), $booking);
-
 
     if ($this->needs3dSecureRedirect($payment)) {
       return $payment->data->redirect3DSecure;
@@ -180,7 +177,7 @@ class BookingController extends CmsController
       return $this->redirectToFailedPage();
     }
 
-    return redirect('/contact');
+    return redirect("/contact");
   }
 
   // "_token" => null
@@ -203,7 +200,6 @@ class BookingController extends CmsController
 
   private function validatePaymentRequest(Request $request)
   {
-
   }
 
   private function redirectToSuccessPage()
@@ -231,20 +227,20 @@ class BookingController extends CmsController
   public function threeDSecureReceiveResponse(Request $request)
   {
     $requestData = $request->all();
-    $decodedSessionData = base64_decode($requestData['threeDSSessionData']);
+    $decodedSessionData = base64_decode($requestData["threeDSSessionData"]);
     parse_str($decodedSessionData, $sessionData);
 
-    if (!empty($requestData['cres']) && !empty($sessionData['transactionId'] && !empty($sessionData['bookingId']))) {
-      $secure = PaymentGatewayService::confirm3DSecure($sessionData['transactionId'], $requestData['cres']);
-      if ($secure?->valid && !empty($secure?->data['amount']['totalAmount'])) {
-        HolidayParkApiService::bookingSuccess($sessionData['bookingId'], $secure->data['amount']['totalAmount']);
+    if (!empty($requestData["cres"]) && !empty($sessionData["transactionId"] && !empty($sessionData["bookingId"]))) {
+      $secure = PaymentGatewayService::confirm3DSecure($sessionData["transactionId"], $requestData["cres"]);
+      if ($secure?->valid && !empty($secure?->data["amount"]["totalAmount"])) {
+        HolidayParkApiService::bookingSuccess($sessionData["bookingId"], $secure->data["amount"]["totalAmount"]);
         return $this->redirectToSuccessPage();
       } else {
-        HolidayParkApiService::bookingFailed($sessionData['bookingId']);
+        HolidayParkApiService::bookingFailed($sessionData["bookingId"]);
         return $this->redirectToFailedPage();
       }
     }
-    return redirect('/contact');
+    return redirect("/contact");
   }
 
   private function needs3dSecureRedirect($payment)
@@ -254,6 +250,6 @@ class BookingController extends CmsController
 
   public function threeDSecureStart(Request $request)
   {
-    return view('holidaypark::holiday-park.booking.3d-secure.start', $request->all());
+    return view($this->getViewName("'holidaypark::holiday-park.booking.3d-secure.start"), [$request->all()]);
   }
 }
