@@ -21,23 +21,23 @@
         </div>
 
         <div class="flex justify-center" id="form-feedback">
-            
+
         </div>
 
         <div class="booking-nav">
-            <div class="cursor-pointer btn secondary-btn" id="back-button">
-                <i class="my-auto cursor-pointer fal fa-angle-left"></i>
+            <div class="nav-button btn secondary-btn" id="back-button">
+                <i class="nav-icon cursor-pointer fal fa-angle-left"></i>
                 <span class="button-text">Back</span>
             </div>
 
-            <div class="cursor-pointer btn secondary-btn" id="next-button">
+            <div class="nav-button btn secondary-btn" id="next-button">
                 <span class="button-text">Next</span>
-                
-                <i class="my-auto cursor-pointer fal fa-angle-right"></i>
+
+                <i class="nav-icon fal fa-angle-right"></i>
             </div>
         </div>
 
-        
+
     </div>
 
 @endsection
