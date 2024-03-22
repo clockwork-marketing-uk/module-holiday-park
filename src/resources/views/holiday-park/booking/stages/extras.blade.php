@@ -5,8 +5,8 @@
         <p>Would you like to add any of the following options.</p>
     </div>
 
-    <div id="loading-spinner-extras" class="flex justify-center hidden mt-10">
-        <i class="w-40 h-40 fal fa-spinner-third animate-spin"></i>
+    <div id="loading-spinner-extras" class="hidden">
+        <i class="spin-icon fal fa-spinner-third animate-spin"></i>
     </div>
 
     <div id="extras-wrap" class="hidden extras-wrap">
@@ -57,7 +57,4 @@
             @endforeach
         </div>
     </div>
-
-
-
 </div>

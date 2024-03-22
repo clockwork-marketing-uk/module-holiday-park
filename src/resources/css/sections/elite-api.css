@@ -149,6 +149,12 @@
                 }
 
             }
+            #loading-spinner-extras {
+                @apply flex justify-center mt-10;
+                .spin-icon {
+                    @apply w-40 h-40;
+                }
+            }
             .extras-wrap{
                 @apply px-6;
                 .extra-option{
