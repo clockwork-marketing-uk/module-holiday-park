@@ -38,7 +38,8 @@ class HolidayParkCmsModule extends CmsModule
     public function boot()
     {
         $views = [
-          __DIR__ . "/resources/views" => base_path("resources/views"),
+          __DIR__ . "/resources/views/sections" => base_path("resources/views/sections"),
+          __DIR__ . "/resources/views/templates" => base_path("resources/views/templates"),
         ];
 
         $css = [
