@@ -51,7 +51,7 @@ class BookingController extends CmsController
           $extras = HolidayParkApiService::getExtras();
 
           $confirmationPage = $this->findConfirmationPage();
-          return view($this->getViewName("holidaypark::holiday-park.booking.book"), [
+          return view($this->getViewName("holiday-park.booking.book"), [
             "parkAccommodation" => $parkAccommodation,
             "accommodation" => $accommodation,
             "stay" => $stay,
@@ -250,6 +250,6 @@ class BookingController extends CmsController
 
   public function threeDSecureStart(Request $request)
   {
-    return view($this->getViewName("'holidaypark::holiday-park.booking.3d-secure.start"), [$request->all()]);
+    return view($this->getViewName("'holiday-park.booking.3d-secure.start"), [$request->all()]);
   }
 }
