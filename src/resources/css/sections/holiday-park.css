@@ -175,3 +175,30 @@ section.accommodation {
     }
   }
 }
+
+.search-results-template {
+  @apply mb-24;
+
+  .select-container {
+    @apply flex justify-center mb-4;
+
+    .select-box {
+      @apply p-2 border-2;
+    }
+  }
+
+  .results-spinner {
+    @apply flex justify-center mt-10;
+    .spinner-icon {
+      @apply w-40 h-40;
+    }
+  }
+
+  .no-results {
+    @apply justify-center hidden text-center mt-14;
+  }
+
+  .property-list {
+    @apply hidden mt-10;
+  }
+}
