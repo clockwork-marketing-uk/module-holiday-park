@@ -85,7 +85,7 @@
                 }
             }
         }
-        #booking-info {
+        #booking-info, #payment-info {
             .form-fields {
                 .form-field-inline {
                     @apply sm:col-span-3;
@@ -98,6 +98,12 @@
                 }
                 .form-field-small {
                     @apply sm:col-span-2;
+                }
+            }
+            .form-errors {
+                @apply my-6;
+                .txt-error {
+                    @apply text-red-500;
                 }
             }
         }
