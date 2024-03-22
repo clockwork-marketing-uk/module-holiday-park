@@ -38,6 +38,6 @@
     },
     "require": {
         "clockwork-marketing-dev/module-core": "^2.0.2",
-        "clockwork-marketing-dev/elite-parks-api": "^1.0.5"
+        "clockwork-marketing-dev/elite-parks-api": "^1.0.6"
     }
 }
