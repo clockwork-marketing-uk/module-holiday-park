@@ -17,7 +17,7 @@
         <div class="select-container">
             <select name="type" id="booking-type" class="select-box">
                 @foreach ($parkAccommodationTypes as $type)
-                    <option value="{{ $type->booking_type }}">{{ $type->name }}</option>
+                    <option {{ $type->booking_type == request()->query('booking_type') ? "selected" : "" }} value="{{ $type->booking_type }}">{{ $type->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -28,12 +28,12 @@
             <i class="spinner-icon fal fa-spinner-third animate-spin"></i>
         </div>
 
-        <div id="no-results-found-message" class="no-results hidden">
+        <div id="no-results-found-message" class="hidden no-results">
             <p>Sorry, no results found</p>
         </div>
 
 
-        <div class="property-list hidden" id="property-list">
+        <div class="hidden property-list" id="property-list">
             @include('holidaypark::holiday-park.properties.property-list', [
                 'accommodation' => $parkAccommodation,
             ])

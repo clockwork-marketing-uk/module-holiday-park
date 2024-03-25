@@ -87,6 +87,10 @@ class SearchResultsPage {
 
     showResults(results) {
         let gradeCodesAvailable = []
+        const isArray = results instanceof Array 
+        if (!isArray) {
+            results = [results]
+        }
         results.forEach(result => {
             gradeCodesAvailable.push(result['@attributes'].grade_code)
         });
@@ -100,7 +104,6 @@ class SearchResultsPage {
             const accommodationId = property.dataset.accommodation_id
             const propertyIsAvailable = gradeCodesAvailable.includes(gradeCode)
             if (!propertyIsAvailable) {
-                console.log(gradeCode)
                 property.style.display = "none";
             }
             else {

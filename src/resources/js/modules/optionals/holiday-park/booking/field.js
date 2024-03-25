@@ -37,7 +37,6 @@ class Field {
         if (this.htmlElement) {
             this.htmlElement.addEventListener("change", (event) => {
                 this.value = event.target.value
-                console.log(this.value)
             });
         }
     }

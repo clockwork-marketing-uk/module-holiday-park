@@ -10,9 +10,7 @@ class ConfirmBooking {
 
     update(currentStage) {
         if (this.isCurrentStage(currentStage)) {
-            console.log('updating confirm booking info')
             this.tagBooking()
-
         }
     }
 

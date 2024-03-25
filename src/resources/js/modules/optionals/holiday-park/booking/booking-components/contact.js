@@ -34,7 +34,6 @@ class Contact {
 
     update(currentStage) {
         if (currentStage == this.stage) {
-            console.log('updating contact info')
             this.updateContactInfo()
             this.updateBookingAvailability()
             return true
