@@ -82,11 +82,17 @@ class ParkAccommodationRepository extends CmsGenericRepository implements ParkAc
       }
     }
 
-    // create / update accommodation relationship
-    ParkAccommodationable::updateOrCreate(
-      ["park_accommodation_id" => $parkAccommodation->id, "park_accommodationable_type" => Accommodation::class],
-      ["park_accommodationable_id" => $attributes["accommodationId"]]
-    );
+    $existingParkAccommodationable = ParkAccommodationable::where("park_accommodation_id", "=", $parkAccommodation->id)->where("park_accommodationable_type", "=", Accommodation::class)->first() ?? null;
+    if (!empty($existingParkAccommodationable)) {
+      $existingParkAccommodationable->update(["park_accommodationable_id" => $attributes["accommodationId"]]);
+    }
+    else {
+      ParkAccommodationable::create([
+        "park_accommodationable_id" => $attributes["accommodationId"],
+        "park_accommodationable_type" => Accommodation::class,
+        "park_accommodation_id" => $parkAccommodation->id
+      ]);
+    }
 
     return $parkAccommodation;
   }
