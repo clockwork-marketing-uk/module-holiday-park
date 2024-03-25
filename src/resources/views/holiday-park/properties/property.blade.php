@@ -11,7 +11,7 @@
 @endphp
 
 <div class="accommodation-item" data-accommodation_id="{{ $card->id }}"
-    {{ $gradeCode ? "data-grade_code=$gradeCode" : '' }} x-data="{ currentFilter: '{!! $categories_string !!}', currentTags: '{!! $tags !!}' }"
+    data-grade_code="{{ $gradeCode }}" x-data="{ currentFilter: '{!! $categories_string !!}', currentTags: '{!! $tags !!}' }"
     x-show='(filter === "false" || currentFilter.includes(filter)) && (tag === "false" || currentTags.includes(tag))'>
 
     <div class="image-container">
