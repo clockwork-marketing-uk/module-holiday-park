@@ -19,7 +19,6 @@ async function updateBookingSummary(bookingNumber) {
     }
 
     function updateExtras () {
-        console.log('update booking summary extras')
         const extrasSummary = bookingSummary.querySelector('#extras-summary')
         const extrasSummaryContainer = bookingSummary.querySelector('#extras-summary-container')
         extrasSummary.innerHTML = ""

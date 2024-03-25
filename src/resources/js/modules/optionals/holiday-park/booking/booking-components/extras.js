@@ -79,8 +79,6 @@ class Extras {
     }
 
     hideUnusedExtras() {
-        console.log(this.extras)
-        console.log(this.fields)
         this.fields.forEach(field => {
             const extra = this.extras.find(extra => field.name === extra.code);
             if (!extra) {

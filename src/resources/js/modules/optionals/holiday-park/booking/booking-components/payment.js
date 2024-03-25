@@ -20,15 +20,11 @@ class Payment {
 
   async onLoad(currentStage) {
     if (currentStage == this.stage) {
-      console.log('loading payment page')
       this.updateExistingFields()
 
       const payNowButton = this.paymentForm.querySelector('#pay-now-button')
-      console.log(payNowButton)
-      console.log(this.paymentForm)
       if (payNowButton) {
         payNowButton.addEventListener("click", (event) => {
-          console.log('click')
           const stages = [
             {
               stage: this.stage,
@@ -36,7 +32,6 @@ class Payment {
             }
           ]
           const validation = validate(stages, this.stage)
-          console.log(validation)
           if (!validation.valid) {
             event.preventDefault();
             showFormFeedback(validation)

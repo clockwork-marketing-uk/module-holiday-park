@@ -67,7 +67,6 @@ class SearchResultsPage {
     getFieldsFromForm() {
         let formFields = {};
         const formFieldElements = this.availabilitySearchBar.querySelectorAll('div');
-        console.log(formFieldElements)
         if (formFieldElements && formFieldElements?.length > 0) {
             formFieldElements.forEach(field => {
                 const input = field.querySelector('input') ?? field.querySelector('select');
@@ -100,7 +99,6 @@ class SearchResultsPage {
             const accommodationId = property.dataset.accommodation_id
             const propertyIsAvailable = gradeCodesAvailable.includes(gradeCode)
             if (!propertyIsAvailable) {
-                console.log(gradeCode)
                 property.style.display = "none";
             }
             else {
