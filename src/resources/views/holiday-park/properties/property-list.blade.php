@@ -8,6 +8,9 @@
                     $card = $card->accommodation->first();
                     $card->parkAccommodation = $parkAccommodation;
                 }
+                else {
+                    continue;
+                }
 
                 $category_items = [];
                 foreach ($card->categories as $category) {
