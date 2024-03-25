@@ -28,12 +28,12 @@
             <i class="spinner-icon fal fa-spinner-third animate-spin"></i>
         </div>
 
-        <div id="no-results-found-message" class="no-results">
+        <div id="no-results-found-message" class="hidden no-results">
             <p>Sorry, no results found</p>
         </div>
 
 
-        <div class="property-list" id="property-list">
+        <div class="hidden property-list" id="property-list">
             @include('holidaypark::holiday-park.properties.property-list', [
                 'accommodation' => $parkAccommodation,
             ])
