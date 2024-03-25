@@ -67,6 +67,7 @@ class SearchResultsPage {
     getFieldsFromForm() {
         let formFields = {};
         const formFieldElements = this.availabilitySearchBar.querySelectorAll('div');
+        console.log(formFieldElements)
         if (formFieldElements && formFieldElements?.length > 0) {
             formFieldElements.forEach(field => {
                 const input = field.querySelector('input') ?? field.querySelector('select');
@@ -86,6 +87,10 @@ class SearchResultsPage {
 
     showResults(results) {
         let gradeCodesAvailable = []
+        const isArray = results instanceof Array 
+        if (!isArray) {
+            results = [results]
+        }
         results.forEach(result => {
             gradeCodesAvailable.push(result['@attributes'].grade_code)
         });
