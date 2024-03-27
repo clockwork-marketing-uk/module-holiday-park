@@ -4,7 +4,7 @@ class SearchResultsPage {
     constructor() {
         this.propertyList = document.getElementById('property-list')
         this.loadingSpinner = document.getElementById('results-loading-spinner')
-        this.bookingType = document.getElementById('booking-type')
+        this.bookingType = document.getElementById('select-booking_type')
         this.noResultsMessage = document.getElementById('no-results-found-message')
         this.findSearchBarOnPage()
         this.preventFormSubmit()
@@ -28,7 +28,14 @@ class SearchResultsPage {
                 if (formButtons.length > 0) {
                     this.preventButtonSubmit(formButtons[0])
                     formButtons[0].addEventListener("click", (e) => {
-                        this.fetchNewResults()
+                        let date = null
+                        const dateInput = this.searchResults.querySelector(".searchBarDateInput")
+                        if (dateInput) {
+                            date = dateInput.value
+                        }
+                        if (date) {
+                            this.fetchNewResults()
+                        }
                     });
                 }
             }
@@ -67,7 +74,6 @@ class SearchResultsPage {
     getFieldsFromForm() {
         let formFields = {};
         const formFieldElements = this.availabilitySearchBar.querySelectorAll('div');
-        console.log(formFieldElements)
         if (formFieldElements && formFieldElements?.length > 0) {
             formFieldElements.forEach(field => {
                 const input = field.querySelector('input') ?? field.querySelector('select');
@@ -123,14 +129,7 @@ class SearchResultsPage {
         formFields.id = accommodationId
         url.search = new URLSearchParams(formFields)
         url.searchParams.set('grade_code', gradeCode)
-        if (this.bookingType && this.bookingType?.value) {
-            url.searchParams.set('booking_type', this.bookingType.value)
-        }
         button.setAttribute('href', url.toString())
-    }
-
-    hidePropertyList() {
-        this.propertyList.classList.add('hidden')
     }
 
     async getResultsFromBackend() {
