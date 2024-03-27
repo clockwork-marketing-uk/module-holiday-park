@@ -53,6 +53,7 @@ function updateNightsSelectorAccommodation() {
     nightsSelector.querySelectorAll("option").forEach(option => {
         option.classList.remove("hidden")
         option.removeAttribute("disabled")
+        option.removeAttribute("selected")
 
         const optionValue = parseInt(option.value)
         
@@ -64,7 +65,7 @@ function updateNightsSelectorAccommodation() {
                 option.classList.add("hidden")
             }
         }
-        if (optionValue == 7) {
+        if (optionValue == stayLength) {
             option.setAttribute("selected", "")
         }
     });
@@ -74,6 +75,7 @@ function updateNightsSelectorCamping() {
     const nightsSelector = searchBar.querySelector("#select-no_of_nights");
     nightsSelector.querySelectorAll("option").forEach(option => {
         option.classList.remove("hidden")
+        option.removeAttribute("disabled")
     });
 }
 
