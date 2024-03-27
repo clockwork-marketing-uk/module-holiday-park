@@ -88,7 +88,7 @@ class SagePayApi
         ],
       ],
       'vendorTxCode' => uniqid(),
-      'amount' => $totalPrice,
+      'amount' => $totalPrice * 100,
       'currency' => 'GBP',
       'description' => 'Transaction Description',
       "apply3DSecure" => "UseMSPSetting",
