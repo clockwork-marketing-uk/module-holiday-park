@@ -19,7 +19,7 @@
 
             <div class="form-field-inline">
                 <label for="mobile_phone_no" class="label">Phone Number</label>
-                <input type="tel" name="mobile_phone_no" id="mobile_phone_no" autocomplete="given-name"
+                <input type="tel" name="mobile_phone_no" id="mobile_phone_no" autocomplete="tel"
                     pattern="^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$">
             </div>
 
