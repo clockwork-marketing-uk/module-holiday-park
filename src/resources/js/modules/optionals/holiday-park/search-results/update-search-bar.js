@@ -29,14 +29,9 @@ function watchBookingTypeForChange() {
     }
 }
 
-function watchArrivalDateForChange() {
-
-}
-
 function updateNightsSelectorAccommodation() {
     const nightsSelector = searchBar.querySelector("#select-no_of_nights");
     const selectedDay = datePickerInstance.selectedDates[0]
-    console.log("night selector")
     if (!selectedDay) return{
 
     }
@@ -62,7 +57,6 @@ function updateNightsSelectorAccommodation() {
         const optionValue = parseInt(option.value)
         
         if ((optionValue !== stayLength) && (optionValue !== 7)) {
-            console.log(optionValue, stayLength)
             if (optionValue == 3 || optionValue == 2 || optionValue == 4) {
                 option.setAttribute("disabled", "")
             }
@@ -107,7 +101,6 @@ window.addEventListener("load", (event) => {
             updateNightsSelectorCamping()
         }
         watchBookingTypeForChange()
-        watchArrivalDateForChange()
     }
 });
 
@@ -139,7 +132,6 @@ function getStartDate() {
     if (bookingType == 1 && !allowedCheckinDays.includes(dayName)) {
         while (!allowedCheckinDays.includes(dayName)) {
             currentDate.setDate(currentDate.getDate()+1)
-            console.log(currentDate)
             dayName = getDayName(currentDate)
         }
     }
@@ -152,7 +144,6 @@ function parseDays(altField) {
 }
 
 function initialiseDatePicker(input) {
-    console.log(input)
     const field = input
     const altField = findAltField(input)
     const fieldDateFormat = "dd-MM-yyyy"
@@ -247,7 +238,6 @@ function initialiseDatePicker(input) {
 
     if (AirDatepicker) {
         datePickerInstance = new AirDatepicker(field, datePickerSettings)
-        console.log(datePickerInstance)
     }
 
     
