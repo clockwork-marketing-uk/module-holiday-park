@@ -88,7 +88,7 @@ function updateArrivalDateCamping() {
 }
 
 function searchBarOnPage() {
-    return document.querySelector(".searchBarContainer.on-page")
+    return document.querySelector(".searchBarContainer")
 }
 
 window.addEventListener("load", (event) => {
@@ -107,7 +107,7 @@ window.addEventListener("load", (event) => {
 });
 
 function regenerateDatePicker() {
-    searchBar = document.querySelector(".searchBarContainer.on-page")
+    searchBar = document.querySelector(".searchBarContainer")
     arrivalDateInput = document.querySelector(".searchBarDateInput")
     arrivalDateInput.replaceWith(arrivalDateInput.cloneNode(false));
     arrivalDateInput = document.querySelector(".searchBarDateInput")
