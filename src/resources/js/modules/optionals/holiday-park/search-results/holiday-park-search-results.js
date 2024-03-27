@@ -4,7 +4,7 @@ class SearchResultsPage {
     constructor() {
         this.propertyList = document.getElementById('property-list')
         this.loadingSpinner = document.getElementById('results-loading-spinner')
-        this.bookingType = document.getElementById('booking-type')
+        this.bookingType = document.getElementById('select-booking_type')
         this.noResultsMessage = document.getElementById('no-results-found-message')
         this.findSearchBarOnPage()
         this.preventFormSubmit()
@@ -123,14 +123,7 @@ class SearchResultsPage {
         formFields.id = accommodationId
         url.search = new URLSearchParams(formFields)
         url.searchParams.set('grade_code', gradeCode)
-        if (this.bookingType && this.bookingType?.value) {
-            url.searchParams.set('booking_type', this.bookingType.value)
-        }
         button.setAttribute('href', url.toString())
-    }
-
-    hidePropertyList() {
-        this.propertyList.classList.add('hidden')
     }
 
     async getResultsFromBackend() {
