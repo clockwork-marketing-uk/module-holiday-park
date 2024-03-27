@@ -28,7 +28,14 @@ class SearchResultsPage {
                 if (formButtons.length > 0) {
                     this.preventButtonSubmit(formButtons[0])
                     formButtons[0].addEventListener("click", (e) => {
-                        this.fetchNewResults()
+                        let date = null
+                        const dateInput = this.searchResults.querySelector(".searchBarDateInput")
+                        if (dateInput) {
+                            date = dateInput.value
+                        }
+                        if (date) {
+                            this.fetchNewResults()
+                        }
                     });
                 }
             }
