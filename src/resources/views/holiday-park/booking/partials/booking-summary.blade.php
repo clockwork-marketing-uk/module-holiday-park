@@ -21,6 +21,7 @@
                 {{ $FormatDateHelper::formatDate($stay->arrival_date, "m/d/y", "jS F o") }}
                 {{-- this date format - 20nd of April 2024 --}}
             </div>
+            
 
             <div class="reservation-option">
                 <strong>Departure Date</strong>
