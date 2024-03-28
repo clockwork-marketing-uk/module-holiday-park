@@ -34,14 +34,21 @@
             </div>
 
             <div class="reservation-option">
-                <strong>Number of Guests</strong>
+                <strong>Number of Adults</strong>
                 {{ $booking->no_of_adults }}
             </div>
 
             <div class="reservation-option">
-                <strong>Number of Pets</strong>
-                {{ $booking->no_of_pets }}
+                <strong>Number of Children</strong>
+                {{ $booking->no_of_children }}
             </div>
+
+            @if ($booking?->no_of_pets > 0)
+            <div class="reservation-option">
+                <strong>Number of Pets</strong>
+                {{ $booking?->no_of_pets }}
+            </div>
+            @endif
         </div>
 
         <div id="loading-spinner-booking-summary" class="flex justify-center hidden mt-10">
