@@ -2,7 +2,21 @@
 
     <div class=section-title>
         <h2 class="title">Availabile Extras</h2>
-        <p>Would you like to add any of the following options.</p>
+        {{-- <p>Would you like to add any of the following options.</p> --}}
+        <p>There are a variety of extras available with your stay. These vary based on the accommodation booked.</p>
+        <p>Please contact us to find out what extras are available for your stay and we will add them to your booking.</p>
+        <p>This includes extras such as ...</p>
+        <p class="mt-2">
+            <ul class="list-disc">
+                <li>Awnings</li>
+                <li>Cots</li>
+                <li>High Chairs</li>
+                <li>Gazebos</li>
+                <li>Prosecco</li>
+                <li>Welcome Pack</li>
+            </ul>
+        </p>
+        <p class="mt-2">Call us on <a href="tel:+441803770206">01803 770206</a> or email us at <a href="mailto:info@leonardscove.co.uk">info@leonardscove.co.uk</a>.</p>
     </div>
 
     <div id="loading-spinner-extras-container">
@@ -11,7 +25,7 @@
         </div>
     </div>
 
-    <div id="extras-wrap" class="hidden extras-wrap">
+    {{-- <div id="extras-wrap" class="extras-wrap">
         <div class="extra-option" id="one-off-extras">
             <div class="title">One off Extras</div>
 
@@ -23,9 +37,9 @@
                     </div>
 
                     <div class="option-selector">
-                        <span class="price">£100</span>
+                        <span class="price"></span>
 
-                        <select data-name="{{ $extra->name }}" data-code="{{ $extra->code }}"
+                        <select class="hidden" data-name="{{ $extra->name }}" data-code="{{ $extra->code }}"
                             name="{{ $extra->code }}" id="" value="{{ $extra->default_quantity }}">
                             @for ($i = $extra->minimum_quantity; $i <= $extra->maximum_quantity; $i++)
                                 <option value="{{ $i }}">{{ $i }}</option>
@@ -58,5 +72,5 @@
                 </div>
             @endforeach
         </div>
-    </div>
+    </div> --}}
 </div>

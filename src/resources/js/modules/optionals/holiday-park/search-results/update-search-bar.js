@@ -107,7 +107,14 @@ window.addEventListener("load", (event) => {
 });
 
 function regenerateDatePicker() {
-    searchBar = document.querySelector(".searchBarContainer")
+    const desktopContainer = document.querySelector(".searchBarContainer")
+    const mobileContainer = document.querySelector(".searchBarMobile")
+    if (desktopContainer) {
+        searchBar = desktopContainer
+    }
+    if (mobileContainer) {
+        searchBar = mobileContainer
+    }
     arrivalDateInput = document.querySelector(".searchBarDateInput")
     arrivalDateInput.replaceWith(arrivalDateInput.cloneNode(false));
     arrivalDateInput = document.querySelector(".searchBarDateInput")
@@ -162,6 +169,7 @@ function initialiseDatePicker(input) {
         altFieldDateFormat: altFieldDateFormat,
         dateFormat: fieldDateFormat,
         selectedDates: [startDate],
+        showOtherMonths: false,
         position({ $datepicker, $target, $pointer, done }) {
             let popper = createPopper($target, $datepicker, {
                 placement: "top",
