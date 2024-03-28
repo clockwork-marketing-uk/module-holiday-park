@@ -162,6 +162,7 @@ function initialiseDatePicker(input) {
         altFieldDateFormat: altFieldDateFormat,
         dateFormat: fieldDateFormat,
         selectedDates: [startDate],
+        showOtherMonths: false,
         position({ $datepicker, $target, $pointer, done }) {
             let popper = createPopper($target, $datepicker, {
                 placement: "top",
