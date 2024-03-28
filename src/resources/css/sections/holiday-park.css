@@ -62,7 +62,6 @@ section.accommodation {
           @apply w-full flex flex-row justify-center items-center gap-4 pb-6 lg:pb-8;
         }
       }
-
     }
 
     &.category-mode {
