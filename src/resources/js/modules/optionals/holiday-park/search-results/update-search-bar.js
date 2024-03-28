@@ -107,7 +107,14 @@ window.addEventListener("load", (event) => {
 });
 
 function regenerateDatePicker() {
-    searchBar = document.querySelector(".searchBarContainer")
+    const desktopContainer = document.querySelector(".searchBarContainer")
+    const mobileContainer = document.querySelector(".searchBarMobile")
+    if (desktopContainer) {
+        searchBar = desktopContainer
+    }
+    if (mobileContainer) {
+        searchBar = mobileContainer
+    }
     arrivalDateInput = document.querySelector(".searchBarDateInput")
     arrivalDateInput.replaceWith(arrivalDateInput.cloneNode(false));
     arrivalDateInput = document.querySelector(".searchBarDateInput")
