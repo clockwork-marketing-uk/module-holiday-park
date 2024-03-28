@@ -22,11 +22,13 @@ class Extras {
         this.oneOffExtrasSection = this.extrasForm.querySelector('#one-off-extras')
         this.perNightExtrasSection = this.extrasForm.querySelector('#per-night-extras')
 
-        this.oneOffExtrasInputs = this.oneOffExtrasSection.querySelectorAll('select')
-        this.perNightExtrasInputs = this.perNightExtrasSection.querySelectorAll('input')
+        // if (this.oneOffExtrasSection && this.perNightExtrasSection) {
+        //     this.oneOffExtrasInputs = this.oneOffExtrasSection.querySelectorAll('select')
+        //     this.perNightExtrasInputs = this.perNightExtrasSection.querySelectorAll('input')
+        //     this.addEventListenersToInputs()
+        //     this.createFields()
+        // }
 
-        this.addEventListenersToInputs()
-        this.createFields()
         updateBookingSummary(this.bookingNo)
     }
 
@@ -42,18 +44,18 @@ class Extras {
 
     async onLoad(currentStage) {
         if (currentStage == this.stage) {
-            this.loading()
+            // this.loading()
 
-            this.booking = await getBooking(this.bookingNo)
-            if (this.booking.booking.extras) {
-                this.extras = this.booking.booking.extras
-                this.hideUnusedExtras()
-            }
-            else {
-                this.onLoad(this.currentStage)
-            }
+            // this.booking = await getBooking(this.bookingNo)
+            // if (this.booking.booking.extras) {
+            //     this.extras = this.booking.booking.extras
+            //     this.hideUnusedExtras()
+            // }
+            // else {
+            //     this.onLoad(this.currentStage)
+            // }
 
-            this.stopLoading()
+            // this.stopLoading()
 
         }
     }
