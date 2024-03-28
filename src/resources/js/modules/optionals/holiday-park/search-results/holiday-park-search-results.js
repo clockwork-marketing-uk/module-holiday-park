@@ -6,6 +6,8 @@ class SearchResultsPage {
         this.loadingSpinner = document.getElementById('results-loading-spinner')
         this.bookingType = document.getElementById('select-booking_type')
         this.noResultsMessage = document.getElementById('no-results-found-message')
+        this.mobileModal = document.querySelector(".mobileModal")
+        this.mobileOpenButton = document.querySelector(".mobileOpenButton")
         this.findSearchBarOnPage()
         this.preventFormSubmit()
         this.fetchNewResults()
@@ -13,8 +15,14 @@ class SearchResultsPage {
 
     findSearchBarOnPage() {
         this.searchResults = document.getElementById('search-results')
-        if (this.searchResults) {
-            this.availabilitySearchBar = this.searchResults.getElementsByTagName('form')[0]
+
+        const desktopContainer = document.querySelector(".searchBarContainer")
+        const mobileContainer = document.querySelector(".searchBarMobile")
+        if (desktopContainer) {
+            this.availabilitySearchBar = desktopContainer.querySelector("form")
+        }
+        if (mobileContainer) {
+            this.availabilitySearchBar = mobileContainer.querySelector("form")
         }
     }
 
@@ -29,16 +37,24 @@ class SearchResultsPage {
                     this.preventButtonSubmit(formButtons[0])
                     formButtons[0].addEventListener("click", (e) => {
                         let date = null
-                        const dateInput = this.searchResults.querySelector(".searchBarDateInput")
+                        const dateInput = this.availabilitySearchBar.querySelector(".searchBarDateInput")
                         if (dateInput) {
                             date = dateInput.value
                         }
                         if (date) {
                             this.fetchNewResults()
+                            this.closeMobileModal()
                         }
                     });
                 }
             }
+        }
+    }
+
+    closeMobileModal() {
+        if (this.mobileModal) {
+            this.mobileModal.classList.add("hide-searchbar")
+            this.mobileOpenButton.style.display = "block"
         }
     }
 
